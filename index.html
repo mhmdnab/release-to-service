@@ -1,0 +1,1366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Release to Service">
+<meta property="og:description" content="An illustrated guide to aircraft maintenance engineering under EASA Part-147, Part-66 and Part-145.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%9C%88%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<title>Release to Service</title>
+<meta name="description" content="An illustrated guide to aircraft maintenance engineering under EASA Part-147, Part-66 and Part-145.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Big+Shoulders+Display:wght@600;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=Saira+Stencil+One&display=swap">
+<style>
+:root{
+  --ground:#E8ECE9; --surface:#F5F7F5; --sunk:#DCE2DE; --ink:#101A1B; --ink-2:#2F3D3B; --muted:#56645F;
+  --line:#C3CCC7; --line-strong:#8C9893;
+  --primer:#9DB548; --primer-ink:#17240A; --primer-text:#44631B; --primer-wash:#DCE6BE;
+  --rbf:#C4122F; --rbf-ink:#FFFFFF; --rbf-text:#B0102A; --rbf-wash:#F4D9DC;
+  --plate:#C9CFCB; --plate-hi:#EEF1EF; --plate-lo:#9FA8A3;
+  --grid:rgba(16,26,27,.055); --shadow:0 1px 0 rgba(255,255,255,.7) inset, 0 18px 40px -24px rgba(16,26,27,.35);
+  --f-display:"Big Shoulders Display", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --f-stencil:"Saira Stencil One", "Big Shoulders Display", Impact, sans-serif;
+  --s-xs:.8125rem; --s-sm:.9375rem; --s-md:1.0625rem; --s-lg:1.3125rem; --s-xl:1.75rem; --s-2xl:2.5rem; --s-3xl:4rem; --s-4xl:clamp(4.5rem, 11vw, 9.5rem);
+  --rail:236px; --measure:68ch;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0C1213; --surface:#131B1C; --sunk:#090E0F; --ink:#E3E9E5; --ink-2:#BAC5C0; --muted:#8A9893;
+    --line:#233030; --line-strong:#3E4C4A;
+    --primer:#B3CB5C; --primer-ink:#131C07; --primer-text:#BFD66A; --primer-wash:#1E2912;
+    --rbf:#D8233D; --rbf-ink:#FFFFFF; --rbf-text:#FF7383; --rbf-wash:#2E1216;
+    --plate:#2A3432; --plate-hi:#3B4745; --plate-lo:#1B2322;
+    --grid:rgba(227,233,229,.045); --shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 22px 50px -26px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0C1213; --surface:#131B1C; --sunk:#090E0F; --ink:#E3E9E5; --ink-2:#BAC5C0; --muted:#8A9893;
+  --line:#233030; --line-strong:#3E4C4A;
+  --primer:#B3CB5C; --primer-ink:#131C07; --primer-text:#BFD66A; --primer-wash:#1E2912;
+  --rbf:#D8233D; --rbf-ink:#FFFFFF; --rbf-text:#FF7383; --rbf-wash:#2E1216;
+  --plate:#2A3432; --plate-hi:#3B4745; --plate-lo:#1B2322;
+  --grid:rgba(227,233,229,.045); --shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 22px 50px -26px rgba(0,0,0,.8);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:24px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *,*::before,*::after{animation:none!important; transition:none!important} }
+body{margin:0; background:var(--ground); color:var(--ink); font-family:var(--f-body); font-size:var(--s-md); line-height:1.6; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility}
+a{color:inherit; text-decoration-color:var(--primer); text-decoration-thickness:2px; text-underline-offset:3px}
+a:hover{text-decoration-color:var(--ink)}
+:focus-visible{outline:3px solid var(--primer); outline-offset:3px; border-radius:2px}
+h1,h2,h3,h4{margin:0; text-wrap:balance; line-height:1.05}
+p{margin:0}
+ul,ol{margin:0; padding:0}
+.mono{font-family:var(--f-mono); font-feature-settings:"zero" 1}
+.tnum{font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono); font-size:var(--s-xs); letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:500}
+.sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+
+/* ---------- shell ---------- */
+.shell{display:grid; grid-template-columns:var(--rail) minmax(0,1fr); max-width:1400px; margin:0 auto}
+.rail{position:sticky; top:0; height:100vh; padding:28px 20px 24px 28px; border-right:1px solid var(--line); display:flex; flex-direction:column; gap:22px; overflow-y:auto}
+.brand{display:flex; flex-direction:column; gap:6px; text-decoration:none}
+.brand b{font-family:var(--f-display); font-weight:900; font-size:1.65rem; letter-spacing:.01em; text-transform:uppercase; line-height:.9}
+.brand span{font-family:var(--f-mono); font-size:.72rem; color:var(--muted); letter-spacing:.08em}
+.rail nav{display:flex; flex-direction:column; gap:2px}
+.rail nav .grp{margin:14px 0 6px; font-family:var(--f-mono); font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted)}
+.rail nav a{display:grid; grid-template-columns:4.2em 1fr; align-items:baseline; gap:8px; padding:7px 8px; text-decoration:none; font-size:var(--s-sm); color:var(--ink-2); border-left:2px solid transparent; transition:background .2s, border-color .2s, color .2s}
+.rail nav a i{font-style:normal; font-family:var(--f-mono); font-size:.7rem; color:var(--muted); letter-spacing:.02em}
+.rail nav a:hover{background:var(--sunk); color:var(--ink)}
+.rail nav a.on{border-left-color:var(--primer); background:var(--primer-wash); color:var(--ink)}
+.rail nav a.on i{color:var(--primer-text)}
+.rail .foot{margin-top:auto; font-family:var(--f-mono); font-size:.68rem; color:var(--muted); line-height:1.5; border-top:1px dashed var(--line-strong); padding-top:14px}
+main{min-width:0}
+
+/* ---------- hero ---------- */
+.hero{position:relative; padding:44px clamp(20px,4vw,56px) 56px; border-bottom:1px solid var(--line);
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:24px 24px; overflow:hidden}
+.hero-top{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; font-family:var(--f-mono); font-size:var(--s-xs); color:var(--muted); letter-spacing:.08em; text-transform:uppercase; border-bottom:1px solid var(--line); padding-bottom:14px}
+.hero-top .rev{display:flex; gap:18px; flex-wrap:wrap}
+.hero-grid{display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:clamp(24px,4vw,56px); align-items:center; margin-top:36px}
+.hero h1{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:var(--s-4xl); line-height:.82; letter-spacing:-.005em}
+.hero h1 .sig{display:block; color:var(--primer-text)}
+.hero .lede{margin-top:26px; font-size:var(--s-lg); line-height:1.5; max-width:34ch; color:var(--ink-2)}
+.hero .lede strong{color:var(--ink)}
+.hero-actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:28px}
+.btn{display:inline-flex; align-items:center; gap:10px; padding:12px 18px; font-family:var(--f-mono); font-size:var(--s-sm); font-weight:500; text-decoration:none; border:1.5px solid var(--ink); color:var(--ink); background:transparent; transition:background .2s, color .2s, transform .2s}
+.btn:hover{background:var(--ink); color:var(--ground)}
+.btn.solid{background:var(--primer); border-color:var(--primer); color:var(--primer-ink)}
+.btn.solid:hover{background:var(--ink); border-color:var(--ink); color:var(--ground)}
+
+.blueprint{position:relative; width:100%}
+.blueprint svg{width:100%; height:auto; display:block; overflow:visible}
+.bp-line{fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linejoin:round}
+.bp-fine{fill:none; stroke:var(--line-strong); stroke-width:1; stroke-dasharray:3 4}
+.bp-fill{fill:var(--surface); stroke:var(--ink); stroke-width:1.4; stroke-linejoin:round}
+.bp-primer{fill:var(--primer); stroke:var(--ink); stroke-width:1.4}
+.bp-label{font-family:var(--f-mono); font-size:11px; fill:var(--ink); letter-spacing:.04em}
+.bp-small{font-family:var(--f-mono); font-size:9.5px; fill:var(--muted); letter-spacing:.04em}
+.bp-dot{fill:var(--ground); stroke:var(--ink); stroke-width:1.4}
+.draw{stroke-dasharray:1600; stroke-dashoffset:0; animation:draw 1.8s cubic-bezier(.6,.05,.3,1) both}
+@keyframes draw{from{stroke-dashoffset:1600}to{stroke-dashoffset:0}}
+
+.rbf{position:absolute; right:clamp(8px,3vw,40px); top:92px; transform-origin:12px 0; animation:swing 5s ease-in-out 1.6s infinite}
+.rbf .tag{display:flex; align-items:center; gap:10px; background:var(--rbf); color:var(--rbf-ink); font-family:var(--f-stencil); font-size:.95rem; letter-spacing:.06em; padding:8px 14px 8px 10px; box-shadow:0 12px 20px -12px rgba(0,0,0,.5); writing-mode:vertical-rl; transform:rotate(180deg)}
+.rbf .tag::before{content:""; width:10px; height:10px; border-radius:50%; background:var(--ground); box-shadow:inset 0 0 0 2px rgba(0,0,0,.25)}
+@keyframes swing{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+
+.hero-lower{display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:24px; margin-top:44px; align-items:stretch}
+.crs{background:var(--surface); border:1.5px solid var(--ink); padding:0; font-size:var(--s-sm); box-shadow:var(--shadow)}
+.crs header{display:flex; justify-content:space-between; gap:12px; padding:10px 16px; border-bottom:1.5px solid var(--ink); font-family:var(--f-mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase}
+.crs header b{font-weight:600}
+.crs .body{display:grid; grid-template-columns:1fr auto; gap:18px; padding:16px}
+.crs blockquote{margin:0; font-family:var(--f-mono); font-size:.86rem; line-height:1.55; color:var(--ink-2)}
+.crs .fields{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); border-top:1px solid var(--line)}
+.crs .fields div{padding:8px 16px; border-right:1px solid var(--line); display:flex; flex-direction:column; gap:2px; min-width:0}
+.crs .fields div:last-child{border-right:0}
+.crs .fields span{font-family:var(--f-mono); font-size:.64rem; color:var(--muted); letter-spacing:.1em; text-transform:uppercase}
+.crs .fields em{font-style:normal; font-family:var(--f-mono); font-size:.8rem; overflow-wrap:anywhere}
+.stamp{width:108px; height:108px; border:2.5px solid var(--primer-text); border-radius:50%; display:grid; place-items:center; text-align:center; color:var(--primer-text); font-family:var(--f-display); font-weight:900; text-transform:uppercase; line-height:.9; font-size:1.05rem; transform:rotate(-12deg); position:relative; align-self:center; animation:stamp .5s cubic-bezier(.2,1.6,.4,1) 1.2s both}
+.stamp::before{content:""; position:absolute; inset:5px; border:1px dashed var(--primer-text); border-radius:50%}
+.stamp small{display:block; font-family:var(--f-mono); font-weight:500; font-size:.55rem; letter-spacing:.12em; margin-top:4px}
+@keyframes stamp{from{transform:rotate(-12deg) scale(1.6); opacity:.2}to{transform:rotate(-12deg) scale(1); opacity:1}}
+
+.plate{position:relative; background:linear-gradient(160deg, var(--plate-hi), var(--plate) 45%, var(--plate-lo)); border-radius:6px; padding:18px 22px 16px; box-shadow:var(--shadow); border:1px solid var(--line-strong)}
+.plate::before,.plate::after{content:""; position:absolute; width:9px; height:9px; border-radius:50%; background:radial-gradient(circle at 35% 35%, var(--plate-hi), var(--plate-lo)); box-shadow:inset 0 0 0 1px var(--line-strong); top:9px; left:9px}
+.plate::after{left:auto; right:9px}
+.plate h2{font-family:var(--f-mono); font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; text-align:center; color:var(--ink-2); font-weight:600}
+.plate dl{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0; margin:12px 0 0}
+.plate dl div{padding:8px 6px; border-top:1px solid var(--line-strong); display:flex; flex-direction:column; gap:2px}
+.plate dt{font-family:var(--f-mono); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); order:2}
+.plate dd{margin:0; font-family:var(--f-display); font-weight:800; font-size:1.9rem; line-height:1; order:1}
+/* ---------- sections ---------- */
+.sec{padding:clamp(56px,8vw,104px) clamp(20px,4vw,56px); border-bottom:1px solid var(--line)}
+.sec.alt{background:var(--surface)}
+.sec-head{display:grid; grid-template-columns:auto minmax(0,1fr); gap:clamp(20px,3.5vw,48px); align-items:end; margin-bottom:clamp(40px,5vw,64px)}
+.numeral{font-family:var(--f-display); font-weight:900; font-size:clamp(6rem,16vw,13.5rem); line-height:.74; letter-spacing:-.025em; color:var(--ink); position:relative; padding-bottom:14px}
+.numeral::after{content:""; position:absolute; left:0; right:0; bottom:0; height:10px; background:repeating-linear-gradient(-45deg, var(--primer) 0 10px, var(--ink) 10px 20px)}
+.numeral small{display:block; font-family:var(--f-mono); font-size:.8rem; font-weight:500; letter-spacing:.24em; color:var(--muted); margin-bottom:10px; line-height:1}
+.sec-head .intro{display:flex; flex-direction:column; gap:14px; padding-bottom:14px}
+.h2{font-family:var(--f-display); font-weight:800; font-size:clamp(2.4rem,4.6vw,4rem); text-transform:uppercase; line-height:.9; letter-spacing:.005em}
+.h3{font-family:var(--f-display); font-weight:800; font-size:clamp(1.8rem,3vw,2.5rem); text-transform:uppercase; line-height:.95; letter-spacing:.01em}
+.h4{font-weight:700; font-size:var(--s-lg); line-height:1.25}
+.intro p{max-width:60ch; color:var(--ink-2); font-size:var(--s-lg); line-height:1.5}
+.block{margin-top:clamp(56px,7vw,88px); display:flex; flex-direction:column; gap:22px}
+.block:first-of-type{margin-top:0}
+.block-head{display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap; border-top:1.5px solid var(--ink); padding-top:14px}
+.prose{max-width:var(--measure); display:flex; flex-direction:column; gap:1em; color:var(--ink-2)}
+.prose strong{color:var(--ink)}
+.ref{font-family:var(--f-mono); font-size:.8em; padding:1px 6px; background:var(--sunk); border:1px solid var(--line); white-space:nowrap; color:var(--ink); font-weight:500}
+.grid-2{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(20px,3vw,40px)}
+.grid-3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(16px,2.4vw,28px)}
+.note{font-size:var(--s-sm); color:var(--muted); max-width:var(--measure)}
+
+/* fact list: label/value pairs */
+.facts{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); border-top:1px solid var(--line); border-left:1px solid var(--line)}
+.facts div{padding:16px 18px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); display:flex; flex-direction:column; gap:6px}
+.facts b{font-family:var(--f-display); font-weight:800; font-size:2.1rem; line-height:1; font-variant-numeric:tabular-nums}
+.facts span{font-size:var(--s-sm); color:var(--ink-2); line-height:1.4}
+.facts em{font-style:normal; font-family:var(--f-mono); font-size:.7rem; color:var(--muted); letter-spacing:.04em}
+
+/* regulation contents */
+.points{columns:2 300px; column-gap:44px; list-style:none}
+.points li{break-inside:avoid; display:grid; grid-template-columns:7.2em 1fr auto; gap:10px; align-items:baseline; padding:7px 0; border-bottom:1px dotted var(--line-strong); font-size:var(--s-sm)}
+.points li b{font-family:var(--f-mono); font-weight:500; color:var(--primer-text); font-size:.85rem}
+.points li.hd{display:block; border-bottom:0; padding:18px 0 4px; font-family:var(--f-mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted)}
+.points li.hd:first-child{padding-top:0}
+.flag{font-family:var(--f-mono); font-size:.6rem; letter-spacing:.1em; padding:1px 5px; border:1px solid currentColor; color:var(--muted); text-transform:uppercase}
+.flag.new{color:var(--primer-text)}
+
+/* chain diagram */
+.chain{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0; position:relative}
+.oversight{grid-column:1/-1; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:10px 14px; border:1.5px dashed var(--line-strong); font-family:var(--f-mono); font-size:.75rem; color:var(--ink-2); margin-bottom:18px; letter-spacing:.03em}
+.node{position:relative; padding:18px 16px 16px; border:1.5px solid var(--ink); margin-right:26px; background:var(--ground); display:flex; flex-direction:column; gap:6px; min-width:0}
+.sec.alt .node{background:var(--surface)}
+.node:last-child{margin-right:0}
+.node:not(:last-child)::after{content:""; position:absolute; right:-27px; top:50%; width:26px; height:1.5px; background:var(--ink)}
+.node:not(:last-child)::before{content:""; position:absolute; right:-27px; top:calc(50% - 4px); border:5px solid transparent; border-left:7px solid var(--ink); border-right:0; transform:translateX(1px)}
+.node .tag{font-family:var(--f-mono); font-size:.64rem; letter-spacing:.12em; color:var(--muted); text-transform:uppercase}
+.node h3{font-family:var(--f-display); font-weight:900; font-size:1.9rem; text-transform:uppercase; line-height:.9}
+.node p{font-size:var(--s-sm); color:var(--ink-2); line-height:1.4}
+.node .out{margin-top:auto; padding-top:10px; border-top:1px dashed var(--line-strong); font-family:var(--f-mono); font-size:.72rem; color:var(--ink)}
+.node.key{background:var(--primer); border-color:var(--ink); color:var(--primer-ink)}
+.sec.alt .node.key{background:var(--primer)}
+.node.key .tag,.node.key p,.node.key .out{color:var(--primer-ink)}
+.node.key .out{border-top-color:rgba(0,0,0,.35)}
+
+/* tiers of law */
+.tiers{display:flex; flex-direction:column; gap:8px}
+.tier{display:grid; grid-template-columns:minmax(150px,.9fr) minmax(0,2fr); gap:20px; align-items:center; padding:16px 20px; border:1.5px solid var(--ink)}
+.tier:nth-child(1){margin-right:18%}
+.tier:nth-child(2){margin-right:9%}
+.tier h4{font-family:var(--f-display); font-weight:800; text-transform:uppercase; font-size:1.45rem; line-height:.95}
+.tier h4 small{display:block; font-family:var(--f-mono); font-weight:500; font-size:.7rem; letter-spacing:.08em; color:var(--muted); text-transform:none; margin-top:6px}
+.tier p{font-size:var(--s-sm); color:var(--ink-2)}
+.tier.soft{border-style:dashed}
+
+/* annex table + generic tables */
+.tbl-wrap{overflow-x:auto; border:1.5px solid var(--ink); background:var(--ground)}
+.sec.alt .tbl-wrap{background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:var(--s-sm)}
+th,td{text-align:left; padding:10px 14px; border-bottom:1px solid var(--line); vertical-align:top}
+thead th{font-family:var(--f-mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:500; background:var(--sunk); border-bottom:1.5px solid var(--ink); white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+td.m{font-family:var(--f-mono); font-size:.8rem; white-space:nowrap}
+tr.hl td{background:var(--primer-wash)}
+tr.hl td:first-child{box-shadow:inset 4px 0 0 var(--primer)}
+
+/* timeline */
+.timeline{overflow-x:auto; padding-bottom:8px}
+.timeline ol{list-style:none; display:grid; grid-auto-flow:column; grid-auto-columns:minmax(190px,1fr); min-width:1180px; position:relative}
+.timeline ol::before{content:""; position:absolute; left:0; right:0; top:44px; height:1.5px; background:var(--ink)}
+.timeline li{padding:0 18px 0 0; display:flex; flex-direction:column; gap:8px}
+.timeline .yr{font-family:var(--f-display); font-weight:900; font-size:2rem; line-height:1; height:34px}
+.timeline .pip{width:13px; height:13px; border:2px solid var(--ink); background:var(--ground); border-radius:50%; margin:2px 0 6px}
+.sec.alt .timeline .pip{background:var(--surface)}
+.timeline li.now .pip{background:var(--primer)}
+.timeline b{font-family:var(--f-mono); font-size:.76rem; font-weight:500; color:var(--primer-text)}
+.timeline p{font-size:var(--s-sm); color:var(--ink-2); line-height:1.45}
+
+/* hero overrides */
+.hero h1{font-size:clamp(3.4rem,7.2vw,7.2rem)}
+.blueprint{padding-right:64px}
+.rbf .tag{transform:none}
+.rbf::before{content:""; display:block; width:1.5px; height:22px; background:var(--ink); margin-left:16px}
+.bp-code{font-weight:600; fill:var(--primer-text)}
+.bp-call{fill:none; stroke:var(--ink); stroke-width:1}
+
+/* requirement grid */
+.req{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); column-gap:clamp(20px,3vw,40px); border-top:1.5px solid var(--ink)}
+.req article{padding:20px 0 24px; border-bottom:1px solid var(--line); display:flex; flex-direction:column; gap:8px}
+.req article .ref{align-self:flex-start}
+.req article p{font-size:var(--s-sm); color:var(--ink-2); line-height:1.5}
+
+/* explorer */
+.explorer{border:1.5px solid var(--ink); background:var(--surface); box-shadow:var(--shadow)}
+.ex-tabs{display:flex; border-bottom:1.5px solid var(--ink); overflow-x:auto}
+.ex-tabs button{flex:1 0 auto; min-width:76px; padding:14px 18px 12px; font-family:var(--f-display); font-weight:800; font-size:1.7rem; line-height:1; background:transparent; border:0; border-right:1px solid var(--line); color:var(--ink-2); cursor:pointer; text-transform:uppercase; transition:background .2s,color .2s}
+.ex-tabs button:last-child{border-right:0}
+.ex-tabs button:hover{background:var(--sunk); color:var(--ink)}
+.ex-tabs button[aria-selected="true"]{background:var(--ink); color:var(--ground)}
+.ex-body{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+.ex-id{padding:26px; border-right:1px solid var(--line); display:flex; flex-direction:column; gap:18px}
+.ex-id .big{font-family:var(--f-display); font-weight:900; font-size:clamp(3.6rem,7vw,5.6rem); line-height:.78; text-transform:uppercase}
+.ex-id .role{font-size:var(--s-lg); font-weight:700; line-height:1.25; max-width:34ch}
+.ex-id .eyebrow{margin-bottom:8px}
+.chips{display:flex; flex-wrap:wrap; gap:6px}
+.chip{font-family:var(--f-mono); font-size:.78rem; padding:6px 10px; border:1px solid var(--line-strong); background:transparent; color:var(--ink); text-align:left; line-height:1.25}
+.chip small{display:block; color:var(--muted); font-size:.66rem}
+button.chip{cursor:pointer}
+button.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--primer); border-color:var(--primer); color:var(--primer-ink)}
+.chip[aria-pressed="true"] small{color:var(--primer-ink)}
+.checklist{list-style:none; display:flex; flex-direction:column; gap:8px}
+.checklist li{display:grid; grid-template-columns:14px 1fr; gap:10px; font-size:var(--s-sm); color:var(--ink-2); line-height:1.45}
+.checklist li::before{content:""; width:12px; height:12px; border:1.5px solid var(--ink); margin-top:5px; background:linear-gradient(var(--primer),var(--primer)) center/6px 6px no-repeat}
+.ex-side{padding:26px; display:flex; flex-direction:column; gap:28px}
+.meter{display:flex; flex-direction:column; gap:10px}
+.meter-row{display:grid; grid-template-columns:minmax(0,1fr) 4.8em; column-gap:12px; row-gap:4px; align-items:center}
+.meter-row .lab{font-size:.82rem; color:var(--ink-2); grid-column:1/-1; line-height:1.3}
+.track{height:14px; background:var(--sunk); border:1px solid var(--line); position:relative; background-image:linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size:20% 100%}
+.track i{position:absolute; top:0; bottom:0; left:0; background:var(--ink); transition:width .6s cubic-bezier(.3,.8,.3,1)}
+.track.p i{background:var(--primer)}
+.meter-row b{font-family:var(--f-mono); font-weight:600; font-size:.82rem; text-align:right; white-space:nowrap}
+.scale{display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:.64rem; color:var(--muted); margin-right:calc(4.8em + 12px)}
+.modstrip{grid-column:1/-1; border-top:1px solid var(--line); padding:20px 26px 24px; display:flex; flex-direction:column; gap:12px; overflow-x:auto}
+.modstrip ol{list-style:none; display:grid; grid-template-columns:repeat(17,minmax(50px,1fr)); gap:4px; min-width:900px}
+.modstrip li{border:1px solid var(--line); padding:8px 6px; display:flex; flex-direction:column; gap:5px; min-height:88px; color:var(--muted); transition:background .25s,color .25s,border-color .25s}
+.modstrip li b{font-family:var(--f-display); font-weight:900; font-size:1.7rem; line-height:1}
+.modstrip li span{font-family:var(--f-mono); font-size:.6rem; line-height:1.25}
+.modstrip li.on{background:var(--ink); color:var(--ground); border-color:var(--ink)}
+.modstrip li.part{background:repeating-linear-gradient(-45deg, var(--primer-wash) 0 5px, transparent 5px 10px); color:var(--ink); border-color:var(--ink)}
+.modstrip.na li{opacity:.4}
+.legend{display:flex; gap:18px; flex-wrap:wrap; font-family:var(--f-mono); font-size:.7rem; color:var(--muted)}
+.legend span{display:inline-flex; align-items:center; gap:6px}
+.legend i{width:14px; height:10px; display:inline-block; border:1px solid var(--ink)}
+.legend .k-on{background:var(--ink)}
+.legend .k-part{background:repeating-linear-gradient(-45deg, var(--primer) 0 3px, transparent 3px 6px)}
+.legend .k-th{background:var(--ink)}
+.legend .k-rng{background:repeating-linear-gradient(-45deg, var(--ink) 0 2px, transparent 2px 5px)}
+.legend .k-pr{background:var(--primer)}
+.legend .k-ext{border-style:dashed; background:transparent}
+
+/* module matrix */
+.mx th:not(:first-child), .mx td:not(:first-child){text-align:center; width:6.2%; padding-left:4px; padding-right:4px}
+.mx td:first-child{white-space:nowrap}
+.mx td:first-child b{font-family:var(--f-mono); font-weight:600; display:inline-block; width:2.4em; color:var(--primer-text)}
+.mx .y{font-size:1.05rem; color:var(--ink); line-height:1}
+.mx .p{font-size:1.05rem; color:var(--primer-text); line-height:1}
+.mx .n{color:var(--line-strong)}
+.mx .col-on{background:var(--primer-wash)}
+.mx thead th.col-on{background:var(--primer); color:var(--primer-ink)}
+
+/* bar chart */
+.bars{border:1.5px solid var(--ink); padding:18px 22px 14px; background:var(--ground)}
+.bar-row, .axis{display:grid; grid-template-columns:4.2em minmax(0,1fr) 8.6em; column-gap:16px; align-items:center}
+.bar-row{padding:7px 0; border-bottom:1px dotted var(--line)}
+.bar-row .cat{font-family:var(--f-display); font-weight:800; font-size:1.35rem; line-height:1}
+.bar{position:relative; height:22px; background-image:linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size:25% 100%}
+.bar i{position:absolute; top:0; bottom:0}
+.bar .tot{left:0; background:var(--primer)}
+.bar .th{left:0; background:var(--ink)}
+.bar .rng{background:repeating-linear-gradient(-45deg, var(--ink) 0 2px, transparent 2px 5px)}
+.bar .ext{border:1.5px dashed var(--primer-text); border-left:0}
+.bar-row .val{font-family:var(--f-mono); font-size:.84rem; text-align:right; line-height:1.25; font-variant-numeric:tabular-nums}
+.bar-row .val small{display:block; color:var(--muted); font-size:.68rem}
+.axis{padding-top:8px}
+.ticks{position:relative; height:16px; font-family:var(--f-mono); font-size:.66rem; color:var(--muted)}
+.ticks span{position:absolute; top:0; transform:translateX(-50%)}
+.ticks span:first-child{transform:none}
+.ticks span:last-child{transform:translateX(-100%)}
+
+/* steps */
+.steps{list-style:none; counter-reset:step; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border-top:1.5px solid var(--ink); border-left:1.5px solid var(--ink)}
+.steps li{counter-increment:step; padding:20px 22px 24px; border-right:1.5px solid var(--ink); border-bottom:1.5px solid var(--ink); display:flex; flex-direction:column; gap:8px}
+.steps li::before{content:"STEP " counter(step, decimal-leading-zero); font-family:var(--f-mono); font-size:.7rem; letter-spacing:.14em; color:var(--primer-text)}
+.steps li h4{font-family:var(--f-display); font-weight:800; text-transform:uppercase; font-size:1.55rem; line-height:.95}
+.steps li p{font-size:var(--s-sm); color:var(--ink-2); line-height:1.45}
+.steps li:last-child{background:var(--primer); color:var(--primer-ink)}
+.steps li:last-child::before, .steps li:last-child p{color:var(--primer-ink)}
+
+/* level cards, groups */
+.levels{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border-top:1.5px solid var(--ink)}
+.levels div{padding:18px 22px 20px 0; display:flex; flex-direction:column; gap:6px; border-bottom:1px solid var(--line)}
+.levels div + div{padding-left:22px; border-left:1px solid var(--line)}
+.levels b{font-family:var(--f-display); font-weight:900; font-size:2.6rem; line-height:.9}
+.levels b small{font-family:var(--f-mono); font-weight:500; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-right:8px; vertical-align:middle}
+.levels p{font-size:var(--s-sm); color:var(--ink-2)}
+.groups{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px}
+.groups article{border:1.5px solid var(--ink); padding:18px 18px 16px; display:flex; flex-direction:column; gap:10px; background:var(--ground)}
+.groups h4{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:2rem; line-height:.9}
+.groups p{font-size:var(--s-sm); color:var(--ink-2); line-height:1.45}
+.groups .end{margin-top:auto; padding-top:10px; border-top:1px dashed var(--line-strong); font-family:var(--f-mono); font-size:.74rem; line-height:1.45; color:var(--ink)}
+
+/* compare */
+.compare{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); border:1.5px solid var(--ink); background:var(--ground)}
+.sec.alt .compare{background:var(--ground)}
+.compare > div{padding:24px 26px; display:flex; flex-direction:column; gap:12px}
+.compare > div + div{border-left:1.5px solid var(--ink)}
+.compare h4{font-family:var(--f-display); font-weight:800; text-transform:uppercase; font-size:1.9rem; line-height:.95}
+.compare h4 small{display:block; font-family:var(--f-mono); font-weight:500; font-size:.7rem; letter-spacing:.14em; color:var(--muted); margin-bottom:6px}
+.compare p{font-size:var(--s-sm); color:var(--ink-2)}
+
+/* ratings */
+.ratings{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.6fr); gap:20px; align-items:start}
+.ratings .stack{display:flex; flex-direction:column; gap:20px}
+.cls{border:1.5px solid var(--ink); background:var(--ground)}
+.cls header{display:flex; align-items:baseline; gap:12px; padding:12px 16px 10px; border-bottom:1.5px solid var(--ink)}
+.cls header b{font-family:var(--f-display); font-weight:900; font-size:2.6rem; line-height:.8}
+.cls header span{font-weight:700}
+.cls header em{margin-left:auto; font-style:normal; font-family:var(--f-mono); font-size:.68rem; color:var(--muted); text-align:right}
+.cls ul{list-style:none; display:grid}
+.cls.wide ul{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cls li{display:grid; grid-template-columns:3em 1fr; gap:8px; padding:8px 16px; border-bottom:1px solid var(--line); font-size:var(--s-sm); line-height:1.35}
+.cls.wide li:nth-child(odd){border-right:1px solid var(--line)}
+.cls li:last-child, .cls.wide li:nth-last-child(2){border-bottom:0}
+.cls li code{font-family:var(--f-mono); font-weight:600; color:var(--primer-text)}
+
+/* severity */
+.sev{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px}
+.sev article{border:1.5px solid var(--ink); padding:20px 22px; display:flex; flex-direction:column; gap:10px; background:var(--ground)}
+.sev article.crit{border-color:var(--rbf)}
+.pill{align-self:flex-start; font-family:var(--f-mono); font-size:.68rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; padding:4px 9px; border:1.5px solid var(--ink); color:var(--ink)}
+.pill.crit{background:var(--rbf); border-color:var(--rbf); color:var(--rbf-ink)}
+.pill.ok{background:var(--primer); border-color:var(--primer); color:var(--primer-ink)}
+.sev p{font-size:var(--s-sm); color:var(--ink-2)}
+.sev b.big{font-family:var(--f-display); font-weight:900; font-size:2.8rem; line-height:.9}
+
+/* dozen, ATA */
+.dozen{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); border-top:1.5px solid var(--ink); border-left:1px solid var(--line)}
+.dozen div{padding:18px 18px 20px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); display:flex; flex-direction:column; gap:6px}
+.dozen b{font-family:var(--f-display); font-weight:800; text-transform:uppercase; font-size:1.4rem; line-height:1}
+.dozen span{font-size:var(--s-sm); color:var(--ink-2); line-height:1.4}
+.ata{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); border-top:1px solid var(--line); border-left:1px solid var(--line)}
+.ata div{padding:10px 12px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); display:flex; gap:10px; align-items:baseline; font-size:.86rem; line-height:1.3}
+.ata b{font-family:var(--f-mono); font-weight:600; color:var(--primer-text); font-size:.86rem}
+
+/* glossary & faq */
+.gl-tools{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+.gl-tools input{font-family:var(--f-mono); font-size:var(--s-sm); padding:11px 14px; border:1.5px solid var(--ink); background:var(--ground); color:var(--ink); width:min(360px,100%); border-radius:0}
+.gl-tools input::placeholder{color:var(--muted)}
+.glossary{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:44px; margin:0; border-top:1.5px solid var(--ink)}
+.glossary div{display:grid; grid-template-columns:9.5em 1fr; gap:14px; padding:12px 0; border-bottom:1px solid var(--line)}
+.glossary dt{font-family:var(--f-mono); font-weight:600; font-size:.84rem; line-height:1.5}
+.glossary dd{margin:0; font-size:var(--s-sm); color:var(--ink-2); line-height:1.5}
+.faq{display:flex; flex-direction:column; border-top:1.5px solid var(--ink); max-width:980px}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer; list-style:none; padding:18px 0; display:grid; grid-template-columns:1fr 30px; gap:18px; align-items:center; font-weight:700; font-size:var(--s-lg); line-height:1.3}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+"; font-family:var(--f-mono); font-size:1.2rem; display:grid; place-items:center; border:1.5px solid var(--ink); width:30px; height:30px}
+.faq details[open] summary::after{content:"\2212"; background:var(--ink); color:var(--ground)}
+.faq .ans{padding:0 48px 22px 0; max-width:var(--measure); color:var(--ink-2)}
+
+footer.site{padding:44px clamp(20px,4vw,56px) 60px; display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:40px; font-size:var(--s-sm); color:var(--ink-2)}
+footer.site h2{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:2.2rem; line-height:.9; color:var(--ink); margin-bottom:12px}
+footer.site ul{list-style:none; display:flex; flex-direction:column; gap:8px}
+footer.site p + p{margin-top:10px}
+
+/* responsive */
+@media (max-width:1080px){
+  html{scroll-padding-top:64px}
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .rail{position:sticky; top:0; z-index:20; height:auto; flex-direction:row; align-items:center; gap:18px; padding:10px 16px; border-right:0; border-bottom:1px solid var(--line); background:var(--ground); overflow-x:auto}
+  .brand span, .rail nav .grp, .rail .foot{display:none}
+  .brand b{font-size:1.1rem; white-space:nowrap}
+  .rail nav{flex-direction:row; gap:2px}
+  .rail nav a{display:block; white-space:nowrap; border-left:0; border-bottom:2px solid transparent; padding:6px 10px}
+  .rail nav a i{display:none}
+  .rail nav a.on{border-bottom-color:var(--primer)}
+  .groups{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:900px){
+  .hero-grid, .hero-lower, .grid-2, .ex-body, .ratings, .compare, .sec-head, footer.site{grid-template-columns:minmax(0,1fr)}
+  .req, .steps, .sev, .grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dozen, .ata{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .levels{grid-template-columns:minmax(0,1fr)}
+  .levels div + div{padding-left:0; border-left:0}
+  .chain{grid-template-columns:minmax(0,1fr)}
+  .node{margin-right:0; margin-bottom:28px}
+  .node:last-child{margin-bottom:0}
+  .node:not(:last-child)::after{right:auto; left:32px; top:auto; bottom:-29px; width:1.5px; height:28px}
+  .node:not(:last-child)::before{right:auto; left:28px; top:auto; bottom:-29px; border:5px solid transparent; border-top:7px solid var(--ink); border-bottom:0; transform:none}
+  .ex-id{border-right:0; border-bottom:1px solid var(--line)}
+  .compare > div + div{border-left:0; border-top:1.5px solid var(--ink)}
+  .glossary{grid-template-columns:minmax(0,1fr)}
+  .tier{margin-right:0 !important; grid-template-columns:minmax(0,1fr); gap:6px}
+  .crs .fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .crs .fields div:nth-child(2){border-right:0}
+  .crs .fields div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .rbf{display:none}
+  .blueprint{padding-right:0}
+  .sec-head .intro{padding-bottom:0}
+}
+@media (max-width:560px){
+  .req, .steps, .sev, .grid-3, .groups{grid-template-columns:minmax(0,1fr)}
+  .dozen, .ata{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .plate dl{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bar-row, .axis{grid-template-columns:3.4em minmax(0,1fr) 4.6em; column-gap:10px}
+  .bar-row .val small{display:none}
+  .crs .body{grid-template-columns:minmax(0,1fr)}
+  .glossary div{grid-template-columns:minmax(0,1fr); gap:2px}
+  .cls.wide ul{grid-template-columns:minmax(0,1fr)}
+  .cls.wide li:nth-child(odd){border-right:0}
+  .cls.wide li:nth-last-child(2){border-bottom:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="rail" aria-label="Contents">
+  <a class="brand" href="#top"><b>Release to<br>Service</b><span>EASA maintenance guide</span></a>
+  <nav>
+    <span class="grp">Framework</span>
+    <a href="#system"><i>1321</i>The system</a>
+    <span class="grp">The three Parts</span>
+    <a href="#p147"><i>147</i>Training organisations</a>
+    <a href="#p66"><i>66</i>Engineer licensing</a>
+    <a href="#p145"><i>145</i>Maintenance organisations</a>
+    <span class="grp">Practice</span>
+    <a href="#floor"><i>ATA 05</i>Hangar floor</a>
+    <a href="#gm"><i>GM</i>Glossary &amp; FAQ</a>
+  </nav>
+  <p class="foot">Informative summary of Reg. (EU) No 1321/2014 as amended, incl. Reg. (EU) 2023/989 and 2023/203. Not legal text &mdash; always check the current EASA Easy Access Rules.</p>
+</aside>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-top">
+    <span>EASA &middot; Continuing airworthiness &middot; Reg. (EU) No 1321/2014</span>
+    <span class="rev"><span>Parts 147 / 66 / 145</span><span>Rev. 2026-09</span></span>
+  </div>
+  <div class="rbf" aria-hidden="true"><div class="tag">REMOVE BEFORE FLIGHT</div></div>
+
+  <div class="hero-grid">
+    <div>
+      <p class="eyebrow">Aircraft maintenance engineering in Europe</p>
+      <h1 id="hero-title">Release to <span class="sig">Service</span></h1>
+      <p class="lede">No aircraft flies after maintenance until a certifying engineer signs for it. This guide covers the European system behind that signature: <strong>Part-147</strong> trains the engineers, <strong>Part-66</strong> licenses them, and <strong>Part-145</strong> approves the organisations they sign for.</p>
+      <div class="hero-actions">
+        <a class="btn solid" href="#p66">Compare licence categories &rarr;</a>
+        <a class="btn" href="#system">How the rules fit together</a>
+      </div>
+    </div>
+
+    <figure class="blueprint" style="margin:0">
+      <svg viewBox="0 0 520 470" role="img" aria-labelledby="bp-title">
+        <title id="bp-title">Plan view of a twin-engine airliner with ATA chapter callouts for navigation, engine, flight controls, fuel, landing gear and APU</title>
+        <path class="bp-line" style="stroke-width:1" d="M4 20V440M4 20h7M4 62h4M4 104h7M4 146h4M4 188h7M4 230h4M4 272h7M4 314h4M4 356h7M4 398h4M4 440h7"/>
+        <g class="bp-small"><text x="14" y="23">0</text><text x="14" y="107">200</text><text x="14" y="191">400</text><text x="14" y="275">600</text><text x="14" y="359">800</text><text x="14" y="443">1000</text></g>
+        <line class="bp-fine" x1="260" y1="6" x2="260" y2="462"/>
+        <path class="bp-fill draw" d="M236 182 L40 292 L44 312 L236 264 Z"/>
+        <path class="bp-fill draw" d="M284 182 L480 292 L476 312 L284 264 Z"/>
+        <path class="bp-fine" d="M228 257 L150 276 M140 279 L58 299 M292 257 L370 276 M380 279 L462 299"/>
+        <path class="bp-fill draw" d="M240 372 L160 418 L163 432 L240 410 Z"/>
+        <path class="bp-fill draw" d="M280 372 L360 418 L357 432 L280 410 Z"/>
+        <rect class="bp-fill" x="133" y="204" width="28" height="64" rx="9"/>
+        <rect class="bp-fill" x="359" y="204" width="28" height="64" rx="9"/>
+        <path class="bp-line" d="M137 214h20M363 214h20"/>
+        <path class="bp-fill draw" d="M260 18 C274 20 284 44 285 78 L285 382 C285 406 273 426 260 444 C247 426 235 406 235 382 L235 78 C236 44 246 20 260 18 Z"/>
+        <path class="bp-line" d="M249 50 L255 43 H265 L271 50"/>
+        <rect class="bp-primer" x="233" y="92" width="4" height="12"/>
+        <rect class="bp-primer" x="283" y="92" width="4" height="12"/>
+        <rect class="bp-primer" x="233" y="352" width="4" height="12"/>
+        <rect class="bp-primer" x="283" y="352" width="4" height="12"/>
+        <rect class="bp-line" x="256" y="86" width="8" height="14"/>
+        <rect class="bp-line" x="240" y="250" width="12" height="20"/>
+        <rect class="bp-line" x="268" y="250" width="12" height="20"/>
+        <path class="bp-fill" d="M257 350 H263 L262 444 H258 Z"/>
+        <path class="bp-call" d="M263 26 H330"/><circle class="bp-dot" cx="260" cy="26" r="3.5"/>
+        <text class="bp-label" x="336" y="30"><tspan class="bp-code">ATA 34</tspan> NAVIGATION</text>
+        <path class="bp-call" d="M147 208 V160 H40"/><circle class="bp-dot" cx="147" cy="212" r="3.5"/>
+        <text class="bp-label" x="40" y="153"><tspan class="bp-code">ATA 72</tspan> ENGINE</text>
+        <path class="bp-call" d="M430 292 V180 H330"/><circle class="bp-dot" cx="430" cy="296" r="3.5"/>
+        <text class="bp-label" x="330" y="173"><tspan class="bp-code">ATA 27</tspan> FLIGHT CONTROLS</text>
+        <path class="bp-call" d="M330 244 V340 H512"/><circle class="bp-dot" cx="330" cy="240" r="3.5"/>
+        <text class="bp-label" x="512" y="333" text-anchor="end"><tspan class="bp-code">ATA 28</tspan> FUEL</text>
+        <path class="bp-call" d="M243 265 L120 372 H40"/><circle class="bp-dot" cx="246" cy="262" r="3.5"/>
+        <text class="bp-label" x="40" y="388"><tspan class="bp-code">ATA 32</tspan> LANDING GEAR</text>
+        <path class="bp-call" d="M263 442 L276 454 H512"/><circle class="bp-dot" cx="260" cy="440" r="3.5"/>
+        <text class="bp-label" x="512" y="448" text-anchor="end"><tspan class="bp-code">ATA 49</tspan> APU</text>
+        <text class="bp-small" x="40" y="466">PLAN VIEW &#183; NOT TO SCALE &#183; FS STATIONS</text>
+      </svg>
+    </figure>
+  </div>
+
+  <div class="hero-lower">
+    <article class="crs" aria-label="Sample certificate of release to service">
+      <header><b>Certificate of release to service</b><span>145.A.50 &middot; sample</span></header>
+      <div class="body">
+        <blockquote>Certifies that the work specified, except as otherwise specified, was carried out in accordance with Part-145 and in respect to that work the aircraft is considered ready for release to service.</blockquote>
+        <div class="stamp">Released<small>SAMPLE</small></div>
+      </div>
+      <div class="fields">
+        <div><span>Aircraft</span><em>EX-AMPL</em></div>
+        <div><span>Approval ref.</span><em>XX.145.0000</em></div>
+        <div><span>Licence</span><em>B1.1 &middot; B2</em></div>
+        <div><span>Date</span><em class="tnum">2026-09-14</em></div>
+      </div>
+    </article>
+    <div class="plate">
+      <h2>Data plate &middot; key figures</h2>
+      <dl>
+        <div><dt>EASA member states</dt><dd class="tnum">31</dd></div>
+        <div><dt>Basic knowledge modules</dt><dd class="tnum">17</dd></div>
+        <div><dt>Exam pass mark</dt><dd class="tnum">75%</dd></div>
+        <div><dt>Minimum age to certify</dt><dd class="tnum">21</dd></div>
+        <div><dt>Months&rsquo; work per 2 yrs</dt><dd class="tnum">6</dd></div>
+        <div><dt>Licence check, years</dt><dd class="tnum">5</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SYSTEM ================= -->
+<section class="sec" id="system" aria-labelledby="system-title">
+  <header class="sec-head">
+    <div class="numeral"><small>REG. (EU) No</small>1321</div>
+    <div class="intro">
+      <h2 class="h2" id="system-title">The system behind the signature</h2>
+      <p>European continuing airworthiness rests on one Commission Regulation. Its annexes, the &ldquo;Parts&rdquo;, divide the work: who trains, who holds a licence, who may maintain, and who manages airworthiness. Every Member State&rsquo;s authority applies the same text.</p>
+    </div>
+  </header>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Three layers of rules</h3><span class="eyebrow">Hard law &rarr; soft law</span></div>
+    <div class="tiers">
+      <div class="tier"><h4>Basic Regulation<small>Reg. (EU) 2018/1139</small></h4><p>Adopted by the European Parliament and Council. Sets the essential requirements for aviation safety and gives EASA its mandate.</p></div>
+      <div class="tier"><h4>Implementing rules<small>Reg. (EU) No 1321/2014</small></h4><p>Adopted by the Commission and binding in every Member State. Its annexes are Part-M, Part-145, Part-66, Part-147 and the rest.</p></div>
+      <div class="tier soft"><h4>AMC &amp; GM<small>EASA ED Decisions</small></h4><p><strong>Acceptable Means of Compliance</strong> show one accepted way to meet a rule. <strong>Guidance Material</strong> explains what the rule means. An organisation may use an alternative means of compliance if its authority agrees.</p></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">The annexes</h3><span class="eyebrow">Reg. (EU) No 1321/2014</span></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Annex</th><th>Part</th><th>Covers</th><th>Who it applies to</th></tr></thead>
+        <tbody>
+          <tr><td class="m">I</td><td class="m">Part-M</td><td>Continuing airworthiness</td><td>Owners, operators and airworthiness management of aircraft outside Part-ML</td></tr>
+          <tr class="hl"><td class="m">II</td><td class="m">Part-145</td><td>Maintenance organisation approvals</td><td>Organisations maintaining complex motor-powered aircraft, aircraft used by licensed air carriers, and their components</td></tr>
+          <tr class="hl"><td class="m">III</td><td class="m">Part-66</td><td>Certifying staff</td><td>Individuals who issue certificates of release to service</td></tr>
+          <tr class="hl"><td class="m">IV</td><td class="m">Part-147</td><td>Training organisation requirements</td><td>Schools that deliver Part-66 basic and type training and examinations</td></tr>
+          <tr><td class="m">Va</td><td class="m">Part-T</td><td>Third-country aircraft</td><td>Aircraft registered outside the EU and used by EU operators</td></tr>
+          <tr><td class="m">Vb</td><td class="m">Part-ML</td><td>Light aircraft airworthiness</td><td>Lighter aircraft (e.g. aeroplanes up to 2&#8239;730&nbsp;kg MTOM) not used by licensed air carriers</td></tr>
+          <tr><td class="m">Vc</td><td class="m">Part-CAMO</td><td>Continuing airworthiness management organisations</td><td>Organisations managing maintenance programmes, ADs, records and airworthiness reviews</td></tr>
+          <tr><td class="m">Vd</td><td class="m">Part-CAO</td><td>Combined airworthiness organisations</td><td>Organisations combining maintenance and airworthiness management for lighter aircraft</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">How the Parts connect</h3><span class="eyebrow">From classroom to flight</span></div>
+    <div class="chain">
+      <div class="oversight"><span>Competent authority of each Member State: approves organisations on its territory and issues licences</span><span>EASA: approves organisations outside EASA states and standardises the national authorities</span></div>
+      <div class="node"><span class="tag">Annex IV</span><h3>Part-147</h3><p>A training organisation runs basic and type courses and the exams.</p><span class="out">&rarr; EASA Form 148a / 149a</span></div>
+      <div class="node"><span class="tag">Annex III</span><h3>Part-66</h3><p>The authority issues the aircraft maintenance licence to the engineer.</p><span class="out">&rarr; EASA Form 26 licence</span></div>
+      <div class="node"><span class="tag">Annex II</span><h3>Part-145</h3><p>The approved organisation authorises its staff and does the maintenance.</p><span class="out">&rarr; CRS &middot; EASA Form 1</span></div>
+      <div class="node" style="border-style:dashed"><span class="tag">Annex Vc</span><h3>Part-CAMO</h3><p>Manages the aircraft&rsquo;s continuing airworthiness and orders the work.</p><span class="out">&rarr; Work order &middot; ARC</span></div>
+      <div class="node key"><span class="tag">Operator</span><h3>Aircraft</h3><p>Flies only with a valid release to service and airworthiness review.</p><span class="out">&rarr; Airworthy flight</span></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">How we got here</h3><span class="eyebrow">Scroll sideways on small screens</span></div>
+    <div class="timeline">
+      <ol>
+        <li><span class="yr">1990s</span><span class="pip"></span><b>JAA codes</b><p>The Joint Aviation Authorities publish JAR-145, JAR-66 and JAR-147, harmonised codes the EU later turns into law.</p></li>
+        <li><span class="yr">2003</span><span class="pip"></span><b>Reg. (EC) 2042/2003</b><p>Part-M, Part-145, Part-66 and Part-147 become EU law. EASA begins operating.</p></li>
+        <li><span class="yr">2014</span><span class="pip"></span><b>Reg. (EU) 1321/2014</b><p>A recast of the continuing airworthiness rules becomes today&rsquo;s base text.</p></li>
+        <li><span class="yr">2018</span><span class="pip"></span><b>2018/1139 &middot; 2018/1142</b><p>A new Basic Regulation is adopted, and the B2L and L licence categories join Part-66.</p></li>
+        <li><span class="yr">2020</span><span class="pip"></span><b>Part-CAMO &middot; Part-CAO</b><p>New organisation annexes apply from 24 March 2020 (Reg. (EU) 2019/1383).</p></li>
+        <li><span class="yr">2022</span><span class="pip"></span><b>Reg. (EU) 2021/1963</b><p>Safety management systems become mandatory in Part-145 from 2 December 2022.</p></li>
+        <li><span class="yr">2024</span><span class="pip"></span><b>Reg. (EU) 2023/989</b><p>A major update to Part-66 and Part-147 adds a revised module structure and distance learning.</p></li>
+        <li class="now"><span class="yr">2026</span><span class="pip"></span><b>Reg. (EU) 2023/203</b><p>Part-IS brings information security management to Part-145 from 22 February 2026.</p></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PART-147 ================= -->
+<section class="sec alt" id="p147" aria-labelledby="p147-title">
+  <header class="sec-head">
+    <div class="numeral"><small>ANNEX IV &middot; PART</small>147</div>
+    <div class="intro">
+      <h2 class="h2" id="p147-title">Training organisations</h2>
+      <p>Part-147 approves the schools. A maintenance training organisation (MTO) can run approved basic training courses, aircraft type or task training, and the examinations that count towards a Part-66 licence.</p>
+    </div>
+  </header>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">What an approved MTO needs</h3><span class="eyebrow">Subpart B &middot; organisational requirements</span></div>
+    <div class="req">
+      <article><span class="ref">147.A.105</span><h4 class="h4">Accountable manager &amp; compliance</h4><p>An accountable manager with corporate authority to finance every training commitment, and nominated person(s) responsible for compliance with Part-147.</p></article>
+      <article><span class="ref">147.A.105</span><h4 class="h4">Instructors, examiners, assessors</h4><p>Enough staff to deliver training, knowledge exams and practical assessments. One person may hold several roles. Instructors and examiners get updating training at least every 24 months.</p></article>
+      <article><span class="ref">147.A.100</span><h4 class="h4">Facilities</h4><p>Enclosed classrooms separate from other facilities, workshops for practical training, no more than 15 students per instructor or assessor in practical work, a technical library and secure record storage.</p></article>
+      <article><span class="ref">147.A.115 / .120</span><h4 class="h4">Equipment &amp; material</h4><p>Instructional equipment, access to examples of the aircraft type for type courses, and training material that covers the Part-66 syllabus at the right knowledge level.</p></article>
+      <article><span class="ref">147.A.125 / .130</span><h4 class="h4">Records &amp; quality</h4><p>Training, exam and assessment records are kept for an unlimited period. Training procedures and a quality system monitor standards and compliance.</p></article>
+      <article><span class="ref">147.A.140</span><h4 class="h4">The exposition (MTOE)</h4><p>This document describes the organisation, its courses, staff and procedures, and the authority audits against it. The approval certificate is EASA Form 11.</p></article>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Minimum basic course length</h3><span class="eyebrow">Part-147 Appendix I</span></div>
+    <p class="prose">Each approved basic course has a minimum total length, of which a set share must be theory. The rest is hands-on practical training. The bars share one scale from 0 to 2&#8239;400 hours.</p>
+    <div class="bars" role="img" aria-label="Bar chart of minimum Part-147 basic course hours by licence category">
+      <div class="bar-row"><span class="cat">A1</span><div class="bar"><i class="tot" style="width:33.333%"></i><i class="th" style="width:10%"></i><i class="rng" style="left:10%;width:1.667%"></i></div><span class="val">800 h<small>theory 30&ndash;35%</small></span></div>
+      <div class="bar-row"><span class="cat">A2</span><div class="bar"><i class="tot" style="width:27.083%"></i><i class="th" style="width:8.125%"></i><i class="rng" style="left:8.125%;width:1.354%"></i></div><span class="val">650 h<small>theory 30&ndash;35%</small></span></div>
+      <div class="bar-row"><span class="cat">A3</span><div class="bar"><i class="tot" style="width:33.333%"></i><i class="th" style="width:10%"></i><i class="rng" style="left:10%;width:1.667%"></i></div><span class="val">800 h<small>theory 30&ndash;35%</small></span></div>
+      <div class="bar-row"><span class="cat">A4</span><div class="bar"><i class="tot" style="width:33.333%"></i><i class="th" style="width:10%"></i><i class="rng" style="left:10%;width:1.667%"></i></div><span class="val">800 h<small>theory 30&ndash;35%</small></span></div>
+      <div class="bar-row"><span class="cat">B1.1</span><div class="bar"><i class="tot" style="width:100%"></i><i class="th" style="width:50%"></i><i class="rng" style="left:50%;width:10%"></i></div><span class="val">2&#8239;400 h<small>theory 50&ndash;60%</small></span></div>
+      <div class="bar-row"><span class="cat">B1.2</span><div class="bar"><i class="tot" style="width:83.333%"></i><i class="th" style="width:41.667%"></i><i class="rng" style="left:41.667%;width:8.333%"></i></div><span class="val">2&#8239;000 h<small>theory 50&ndash;60%</small></span></div>
+      <div class="bar-row"><span class="cat">B1.3</span><div class="bar"><i class="tot" style="width:100%"></i><i class="th" style="width:50%"></i><i class="rng" style="left:50%;width:10%"></i></div><span class="val">2&#8239;400 h<small>theory 50&ndash;60%</small></span></div>
+      <div class="bar-row"><span class="cat">B1.4</span><div class="bar"><i class="tot" style="width:100%"></i><i class="th" style="width:50%"></i><i class="rng" style="left:50%;width:10%"></i></div><span class="val">2&#8239;400 h<small>theory 50&ndash;60%</small></span></div>
+      <div class="bar-row"><span class="cat">B2</span><div class="bar"><i class="tot" style="width:100%"></i><i class="th" style="width:50%"></i><i class="rng" style="left:50%;width:10%"></i></div><span class="val">2&#8239;400 h<small>theory 50&ndash;60%</small></span></div>
+      <div class="bar-row"><span class="cat">B2L</span><div class="bar"><i class="tot" style="width:62.5%"></i><i class="th" style="width:31.25%"></i><i class="rng" style="left:31.25%;width:6.25%"></i><i class="ext" style="left:62.5%;width:15.208%"></i></div><span class="val">1&#8239;500 h<small>+ up to 365 h ratings</small></span></div>
+      <div class="bar-row"><span class="cat">B3</span><div class="bar"><i class="tot" style="width:41.667%"></i><i class="th" style="width:20.833%"></i><i class="rng" style="left:20.833%;width:4.167%"></i></div><span class="val">1&#8239;000 h<small>theory 50&ndash;60%</small></span></div>
+      <div class="axis"><span></span><div class="ticks"><span style="left:0">0</span><span style="left:25%">600</span><span style="left:50%">1&#8239;200</span><span style="left:75%">1&#8239;800</span><span style="left:100%">2&#8239;400 h</span></div><span></span></div>
+    </div>
+    <div class="legend"><span><i class="k-th"></i>Minimum theory share</span><span><i class="k-rng"></i>Theory range</span><span><i class="k-pr"></i>Practical training</span><span><i class="k-ext"></i>B2L system ratings: com/nav 90 h, instruments 55 h, autoflight 80 h, surveillance 40 h, airframe 100 h</span></div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Examinations</h3><span class="eyebrow">Standard: Part-66 Appendix II &middot; 147.A.135</span></div>
+    <div class="facts">
+      <div><b>3</b><span>answer options on each multiple-choice question</span><em>MCQ format</em></div>
+      <div><b>75 s</b><span>nominal time allowed per multiple-choice question</span><em>Timing</em></div>
+      <div><b>75%</b><span>pass mark for every module exam and essay</span><em>Pass mark</em></div>
+      <div><b>2</b><span>essay questions, in Module 7 only, 20 minutes each</span><em>Categories A, B1, B2, B2L, B3</em></div>
+      <div><b>90 d</b><span>wait before a re-sit, or 30 days after retraining at a Part-147 organisation</span><em>Failed module</em></div>
+      <div><b>3</b><span>attempts allowed per module exam in any 12 months</span><em>Attempt limit</em></div>
+      <div><b>10 yr</b><span>limit: a module must be passed within 10 years before the licence application</span><em>66.A.25(c)</em></div>
+      <div><b>148a</b><span>certificate for basic training and exams, issued by the MTO (148b when issued by the authority)</span><em>Type courses: 149a / 149b</em></div>
+    </div>
+    <p class="note">Basic knowledge exams are held by a Part-147 organisation or by the competent authority. For category L, another organisation agreed with the authority may also hold them (66.A.25(b)).</p>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Type training &amp; OJT</h3><span class="eyebrow">Subpart D &middot; Part-66 Appendix III</span></div>
+    <div class="grid-2">
+      <div class="levels" style="grid-template-columns:minmax(0,1fr)">
+        <div><b><small>Level</small>1</b><p>Brief overview of the airframe, systems and powerplant, as in the systems description section of the maintenance manual.</p></div>
+        <div style="padding-left:0;border-left:0"><b><small>Level</small>2</b><p>Basic system overview: controls, indicators and principal components with their location and purpose, plus servicing and minor troubleshooting.</p></div>
+        <div style="padding-left:0;border-left:0"><b><small>Level</small>3</b><p>Detailed description, operation, component location, removal and installation, BITE and troubleshooting to maintenance-manual level.</p></div>
+      </div>
+      <div class="prose">
+        <p>Type courses (147.A.300) have <strong>theoretical and practical elements</strong> and end with a <strong>type evaluation</strong> (147.A.305). The Appendix III syllabus sets a training level for each ATA chapter and licence category. Task training for category A covers specific tasks instead of a whole type.</p>
+        <p><strong>On-the-job training (OJT)</strong> is required for the <strong>first type rating in each licence category or subcategory</strong> (not for C):</p>
+        <ul class="checklist">
+          <li>Completed within the 3 years before applying for the rating</li>
+          <li>At least half of the tasks done after the theoretical type training</li>
+          <li>Ends with a final assessment lasting at least one working day</li>
+          <li>No fixed minimum duration: the task list sets the length</li>
+        </ul>
+        <p>For Group 2 and 3 aircraft, a type rating can also be endorsed after a type evaluation plus demonstrated practical experience on the type (66.A.45(d)).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Contents of Part-147</h3><span class="eyebrow">Section A &middot; organisation requirements</span></div>
+    <ul class="points">
+      <li class="hd">Subpart A &middot; General</li>
+      <li><b>147.A.05</b><span>Scope</span></li>
+      <li><b>147.A.10</b><span>General</span></li>
+      <li><b>147.A.15</b><span>Application</span></li>
+      <li class="hd">Subpart B &middot; Organisational requirements</li>
+      <li><b>147.A.100</b><span>Facility requirements</span></li>
+      <li><b>147.A.105</b><span>Personnel requirements</span></li>
+      <li><b>147.A.110</b><span>Records of instructors, examiners and assessors</span></li>
+      <li><b>147.A.115</b><span>Instructional equipment</span></li>
+      <li><b>147.A.120</b><span>Maintenance training material</span></li>
+      <li><b>147.A.125</b><span>Records</span></li>
+      <li><b>147.A.130</b><span>Training procedures and quality system</span></li>
+      <li><b>147.A.135</b><span>Examinations</span></li>
+      <li><b>147.A.140</b><span>Maintenance training organisation exposition</span></li>
+      <li><b>147.A.145</b><span>Privileges of the maintenance training organisation</span></li>
+      <li><b>147.A.150</b><span>Changes to the maintenance training organisation</span></li>
+      <li><b>147.A.155</b><span>Continued validity</span></li>
+      <li><b>147.A.160</b><span>Findings</span></li>
+      <li class="hd">Subpart C &middot; Approved basic training</li>
+      <li><b>147.A.200</b><span>The approved basic training course</span></li>
+      <li><b>147.A.205</b><span>Basic knowledge examinations</span></li>
+      <li><b>147.A.210</b><span>Basic practical assessment</span></li>
+      <li class="hd">Subpart D &middot; Aircraft type/task training</li>
+      <li><b>147.A.300</b><span>Aircraft type/task training</span></li>
+      <li><b>147.A.305</b><span>Aircraft type evaluation and task assessment</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= PART-66 ================= -->
+<section class="sec" id="p66" aria-labelledby="p66-title">
+  <header class="sec-head">
+    <div class="numeral"><small>ANNEX III &middot; PART</small>66</div>
+    <div class="intro">
+      <h2 class="h2" id="p66-title">Engineer licensing</h2>
+      <p>Part-66 licenses the individual. A Member State&rsquo;s authority issues the aircraft maintenance licence (AML) on EASA Form 26, and every EASA state recognises it. The licence proves you are qualified. The right to sign comes from an organisation&rsquo;s certification authorisation.</p>
+    </div>
+  </header>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Licence explorer</h3><span class="eyebrow">66.A.20 privileges &middot; 66.A.30 experience &middot; Appendix I modules</span></div>
+    <div class="explorer" id="explorer">
+      <div class="ex-tabs" role="tablist" aria-label="Licence categories">
+        <button type="button" role="tab" data-cat="A" aria-selected="false">A</button>
+        <button type="button" role="tab" data-cat="B1" aria-selected="true">B1</button>
+        <button type="button" role="tab" data-cat="B2" aria-selected="false">B2</button>
+        <button type="button" role="tab" data-cat="B2L" aria-selected="false">B2L</button>
+        <button type="button" role="tab" data-cat="B3" aria-selected="false">B3</button>
+        <button type="button" role="tab" data-cat="L" aria-selected="false">L</button>
+        <button type="button" role="tab" data-cat="C" aria-selected="false">C</button>
+      </div>
+      <div class="ex-body" role="tabpanel" aria-live="polite">
+        <div class="ex-id">
+          <div class="big" id="ex-big">B1</div>
+          <p class="role" id="ex-role">Maintenance certifying technician: mechanical</p>
+          <div><p class="eyebrow" id="ex-subs-label">Subcategories</p><div class="chips" id="ex-subs"></div></div>
+          <div><p class="eyebrow">Privileges</p><ul class="checklist" id="ex-priv"></ul></div>
+          <p class="note" id="ex-rating"></p>
+        </div>
+        <div class="ex-side">
+          <div class="meter">
+            <p class="eyebrow">Minimum practical experience, years</p>
+            <div class="meter" id="ex-exp"></div>
+            <div class="scale" aria-hidden="true"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+            <p class="note" id="ex-expnote"></p>
+          </div>
+          <div class="meter">
+            <p class="eyebrow">Part-147 basic course</p>
+            <div class="meter" id="ex-hours"></div>
+            <p class="note" id="ex-hnote"></p>
+          </div>
+        </div>
+        <div class="modstrip" id="ex-mods">
+          <p class="eyebrow">Basic knowledge modules</p>
+          <ol id="ex-modlist"></ol>
+          <div class="legend"><span><i class="k-on"></i>Required</span><span><i class="k-part"></i>Partly required</span></div>
+          <p class="note" id="ex-mnote"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Levels of knowledge</h3><span class="eyebrow">Appendix I &middot; set per module and category</span></div>
+    <div class="levels">
+      <div><b><small>Level</small>1</b><p>Familiarisation with the principal elements of the subject. Can describe it in simple terms, using common words and examples.</p></div>
+      <div><b><small>Level</small>2</b><p>General knowledge of theory and practice. Can apply it using detailed procedures and read drawings, sketches and schematics.</p></div>
+      <div><b><small>Level</small>3</b><p>Detailed knowledge of theory and practice. Can combine elements logically, interpret results and take corrective action.</p></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Module matrix</h3><span class="eyebrow">Linked to the explorer &middot; highlighted column follows your choice</span></div>
+    <div class="tbl-wrap">
+      <table class="mx" id="mx">
+        <thead><tr><th>Module</th><th data-col="A1">A1</th><th data-col="A2">A2</th><th data-col="A3">A3</th><th data-col="A4">A4</th><th data-col="B1.1">B1.1</th><th data-col="B1.2">B1.2</th><th data-col="B1.3">B1.3</th><th data-col="B1.4">B1.4</th><th data-col="B2">B2</th><th data-col="B2L">B2L</th><th data-col="B3">B3</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note">&#9679; required &nbsp; &#9680; partly required: B2L takes Module 13 by submodule for each system rating, and Module 14 only for the instruments and airframe systems ratings. Since Reg. (EU) 2023/989, Modules 7, 11 and 17 are single modules, and the required knowledge level differs by category.</p>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Experience requirements</h3><span class="eyebrow">66.A.30</span></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Licence</th><th>No relevant technical training</th><th>Skilled-worker technical training</th><th>Part-147 basic course</th></tr></thead>
+        <tbody class="tnum">
+          <tr><td class="m">A &middot; B1.2 &middot; B1.4 &middot; B3</td><td>3 years</td><td>2 years</td><td>1 year</td></tr>
+          <tr><td class="m">B1.1 &middot; B1.3 &middot; B2</td><td>5 years</td><td>3 years</td><td>2 years</td></tr>
+          <tr><td class="m">B2L</td><td>3 years</td><td>2 years</td><td>1 year <span class="note">+ 3 months per rating added later</span></td></tr>
+          <tr><td class="m">L</td><td colspan="3">2 years across the subcategory, or 1 year with a limitation entered on the licence</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Category C route</th><th>Experience</th><th>Including</th></tr></thead>
+        <tbody>
+          <tr><td class="m">Complex motor-powered</td><td>3 years exercising B1.1, B1.3 or B2 privileges, or 5 years exercising B1.2, B1.4 or L5 privileges, as support or certifying staff</td><td>12 months as base maintenance support staff</td></tr>
+          <tr><td class="m">Other aircraft</td><td>3 years exercising B1, B2, B2L, B3 or L privileges</td><td>6 months as base maintenance support staff</td></tr>
+          <tr><td class="m">Academic degree</td><td>Relevant technical degree plus 3 years in an aircraft maintenance environment</td><td>6 months taking part in base maintenance tasks</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="checklist" style="max-width:var(--measure)">
+      <li>Experience must be practical, gained on operating aircraft, and cover a representative cross-section of tasks.</li>
+      <li>At least 1 year must be recent experience on the category sought. Adding a category later needs at least 3 months.</li>
+      <li>All experience must fall within the 10 years before the application.</li>
+      <li>Experience outside Part-145 or Part-CAO organisations can count if the authority judges it equivalent, but some experience in an approved organisation is still required.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Aircraft groups &amp; ratings</h3><span class="eyebrow">66.A.5 groups &middot; 66.A.45 endorsement</span></div>
+    <div class="groups">
+      <article><h4>Group 1</h4><p>Complex motor-powered aircraft, multi-engine helicopters, non-piston aeroplanes certified above FL290, fly-by-wire aircraft, and gas airships other than ELA2.</p><p class="end">B1 &middot; B2 &middot; C: individual type rating</p></article>
+      <article><h4>Group 2</h4><p><strong>2a</strong> single turboprop aeroplanes, <strong>2b</strong> single turbine-engine helicopters, <strong>2c</strong> single piston-engine helicopters, when not in Group 1.</p><p class="end">B1 &middot; B2 &middot; C: type, manufacturer subgroup or full subgroup. B2L: manufacturer subgroup or full subgroup</p></article>
+      <article><h4>Group 3</h4><p>Piston-engine aeroplanes not in Group 1.</p><p class="end">B1 &middot; B2 &middot; C: type or full group. B2L: full group. B3: its own single rating</p></article>
+      <article><h4>Group 4</h4><p>Sailplanes, powered sailplanes, balloons and airships not in Group 1.</p><p class="end">B2 &middot; B2L: full group. L: rating per subcategory</p></article>
+    </div>
+    <p class="note">For B1 and C, a manufacturer subgroup rating requires qualification on at least two types from one manufacturer, and a full subgroup rating on at least three types from different manufacturers (66.A.45(e)). Category A needs no aircraft rating on the licence.</p>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Licence vs authorisation</h3><span class="eyebrow">Two documents, two issuers</span></div>
+    <div class="compare">
+      <div>
+        <h4><small>PART-66 &middot; ISSUED BY THE AUTHORITY</small>The licence</h4>
+        <ul class="checklist">
+          <li>EASA Form 26, held personally and recognised in all EASA states</li>
+          <li>Lists categories, subcategories, aircraft ratings and any limitations</li>
+          <li>Becomes invalid 5 years after issue or last change unless submitted to the authority for verification (66.A.40)</li>
+          <li>Using its privileges requires 6 months of relevant experience in the preceding 2 years, adequate competence and command of the maintenance data&rsquo;s language (66.A.20(b))</li>
+        </ul>
+      </div>
+      <div>
+        <h4><small>PART-145 &middot; ISSUED BY THE ORGANISATION</small>The certification authorisation</h4>
+        <ul class="checklist">
+          <li>Written scope set by the organisation, within your licence and its approval (145.A.35)</li>
+          <li>Minimum age 21, with competence assessed, including human factors</li>
+          <li>6 months of relevant experience in any 2 consecutive years</li>
+          <li>Recurrent training in every 2-year period</li>
+          <li>Valid only while you work for that organisation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">From student to signature</h3><span class="eyebrow">The typical sequence</span></div>
+    <ol class="steps">
+      <li><h4>Choose a category</h4><p>A, B1, B2, B2L, B3, C or L. Each has its own modules, experience and privileges.</p></li>
+      <li><h4>Pass the modules</h4><p>Take a Part-147 course with its exams, or self-study and sit the exams with the competent authority.</p></li>
+      <li><h4>Build experience</h4><p>Work 1 to 5 years on operating aircraft, depending on the category and your training route.</p></li>
+      <li><h4>Apply for the AML</h4><p>Send EASA Form 19 to the authority and receive the licence on EASA Form 26.</p></li>
+      <li><h4>Type training</h4><p>Complete theoretical and practical training on your first aircraft type, with a type evaluation.</p></li>
+      <li><h4>On-the-job training</h4><p>Do supervised tasks on the type. This is required for the first type rating in each category.</p></li>
+      <li><h4>Rating endorsed</h4><p>The authority adds the aircraft rating to your licence.</p></li>
+      <li><h4>Get authorised</h4><p>A Part-145 organisation assesses you and issues a certification authorisation.</p></li>
+      <li><h4>Sign the CRS</h4><p>Certify that the work was done correctly and the aircraft is ready for release to service.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================= PART-145 ================= -->
+<section class="sec alt" id="p145" aria-labelledby="p145-title">
+  <header class="sec-head">
+    <div class="numeral"><small>ANNEX II &middot; PART</small>145</div>
+    <div class="intro">
+      <h2 class="h2" id="p145-title">Maintenance organisations</h2>
+      <p>Part-145 approves the organisations that maintain complex motor-powered aircraft, aircraft used by licensed air carriers, and their components. The approval, EASA Form 3-145, has no expiry date. It stays valid while the organisation keeps complying and gives the authority access.</p>
+    </div>
+  </header>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Classes &amp; ratings</h3><span class="eyebrow">Appendix II to Annex II</span></div>
+    <div class="ratings">
+      <div class="stack">
+        <div class="cls"><header><b>A</b><span>Aircraft</span><em>base and/or line</em></header>
+          <ul><li><code>A1</code><span>Aeroplanes above 5&#8239;700 kg</span></li><li><code>A2</code><span>Aeroplanes 5&#8239;700 kg and below</span></li><li><code>A3</code><span>Helicopters</span></li><li><code>A4</code><span>Aircraft other than A1, A2 and A3</span></li></ul></div>
+        <div class="cls"><header><b>B</b><span>Engines</span><em>complete units</em></header>
+          <ul><li><code>B1</code><span>Turbine</span></li><li><code>B2</code><span>Piston</span></li><li><code>B3</code><span>APU</span></li></ul></div>
+        <div class="cls"><header><b>D</b><span>Specialised services</span></header>
+          <ul><li><code>D1</code><span>Non-destructive testing</span></li></ul></div>
+      </div>
+      <div class="cls wide"><header><b>C</b><span>Components</span><em>other than complete engines or APUs</em></header>
+        <ul>
+          <li><code>C1</code><span>Air conditioning &amp; pressurisation</span></li><li><code>C2</code><span>Auto flight</span></li>
+          <li><code>C3</code><span>Communications &amp; navigation</span></li><li><code>C4</code><span>Doors &amp; hatches</span></li>
+          <li><code>C5</code><span>Electrical power &amp; lights</span></li><li><code>C6</code><span>Equipment</span></li>
+          <li><code>C7</code><span>Engine &amp; APU</span></li><li><code>C8</code><span>Flight controls</span></li>
+          <li><code>C9</code><span>Fuel</span></li><li><code>C10</code><span>Helicopter rotors</span></li>
+          <li><code>C11</code><span>Helicopter transmissions</span></li><li><code>C12</code><span>Hydraulic power</span></li>
+          <li><code>C13</code><span>Indicating &amp; recording systems</span></li><li><code>C14</code><span>Landing gear</span></li>
+          <li><code>C15</code><span>Oxygen</span></li><li><code>C16</code><span>Propellers</span></li>
+          <li><code>C17</code><span>Pneumatic &amp; vacuum</span></li><li><code>C18</code><span>Ice, rain &amp; fire protection</span></li>
+          <li><code>C19</code><span>Windows</span></li><li><code>C20</code><span>Structural</span></li>
+          <li><code>C21</code><span>Water ballast</span></li><li><code>C22</code><span>Propulsion augmentation</span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">The exact scope of work, down to part numbers or aircraft types, is listed in the organisation&rsquo;s exposition or capability list.</p>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Line &amp; base maintenance</h3><span class="eyebrow">Every A rating is limited to one or both</span></div>
+    <div class="compare">
+      <div>
+        <h4><small>BEFORE FLIGHT</small>Line maintenance</h4>
+        <p>Maintenance done before flight to make sure the aircraft is fit for the intended flight. It covers troubleshooting, defect rectification, component replacement (with external test equipment if needed), and scheduled checks with visual inspections that catch obvious problems without extensive in-depth inspection.</p>
+        <p>Certified by B1, B2, B2L, B3 or L staff within their privileges, or by category A for endorsed tasks.</p>
+      </div>
+      <div>
+        <h4><small>IN THE HANGAR</small>Base maintenance</h4>
+        <p>Anything beyond line maintenance: heavy checks, detailed structural inspections, major modifications and repairs, usually with the aircraft out of service for days or weeks.</p>
+        <p>For large aircraft, a category C engineer issues the release for the aircraft as a whole. B1 and B2 <strong>support staff</strong> first confirm that the tasks in their specialty were properly completed.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">People &amp; resources</h3><span class="eyebrow">145.A.25 &ndash; 145.A.45</span></div>
+    <div class="req">
+      <article><span class="ref">145.A.30(a)</span><h4 class="h4">Accountable manager</h4><p>Has corporate authority to fund and carry out all maintenance to the required standard, and sets and promotes the safety policy.</p></article>
+      <article><span class="ref">145.A.30(b)&ndash;(cb)</span><h4 class="h4">Nominated persons</h4><p>Lead maintenance, compliance monitoring and safety management, with direct access to the accountable manager.</p></article>
+      <article><span class="ref">145.A.30(d)</span><h4 class="h4">Man-hour plan</h4><p>Ensures enough qualified staff to plan, perform, supervise, inspect and monitor the work, with a procedure to reassess work when staffing drops below plan.</p></article>
+      <article><span class="ref">145.A.35</span><h4 class="h4">Certifying &amp; support staff</h4><p>Assessed, authorised in writing, at least 21 years old, with 6 months of relevant experience in any 2 consecutive years and recurrent training every 2 years.</p></article>
+      <article><span class="ref">145.A.25 / .40</span><h4 class="h4">Facilities &amp; tools</h4><p>Hangars for base maintenance, protected workshops, and segregated storage for serviceable and unserviceable parts. Tools and equipment are calibrated to an officially recognised standard.</p></article>
+      <article><span class="ref">145.A.42 / .45</span><h4 class="h4">Components &amp; data</h4><p>Parts are accepted only with the right release, such as EASA Form 1, and properly classified. Work follows current maintenance data: ADs, instructions for continued airworthiness and approved repair data.</p></article>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Signing off the work</h3><span class="eyebrow">145.A.48 &middot; 145.A.50 &middot; 145.A.55 &middot; 145.A.60</span></div>
+    <div class="grid-2">
+      <div class="prose">
+        <p>A <strong>certificate of release to service</strong> is issued before flight when maintenance is complete. Authorised certifying staff sign it on behalf of the organisation after verifying that all ordered maintenance was properly done to the exposition&rsquo;s procedures and the maintenance data, with no known non-compliance that endangers flight safety.</p>
+        <p>A component maintained off the aircraft is released on <strong>EASA Form 1</strong>, the authorised release certificate. New defects or incomplete work orders go back to whoever manages the aircraft&rsquo;s continuing airworthiness for agreement.</p>
+        <p>After any <strong>critical maintenance task</strong>, the organisation must apply error-capturing methods such as an independent inspection (145.A.48).</p>
+      </div>
+      <div class="facts" style="align-self:start">
+        <div><b>3 yr</b><span>retention of maintenance records from the date of release</span><em>145.A.55</em></div>
+        <div><b>5 yr</b><span>retention of management system records</span><em>145.A.55</em></div>
+        <div><b>72 h</b><span>deadline to report an occurrence under Reg. (EU) 376/2014</span><em>145.A.60</em></div>
+        <div><b>21</b><span>minimum age for certifying staff and support staff</span><em>145.A.35</em></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Management system</h3><span class="eyebrow">145.A.200 &middot; 145.A.200A &middot; 145.A.202</span></div>
+    <div class="grid-2">
+      <div class="prose">
+        <p>Since <strong>2 December 2022</strong> (Reg. (EU) 2021/1963), every Part-145 organisation must run a management system. It combines a safety policy and objectives, hazard identification and safety risk management, an internal safety reporting scheme that protects reporters, compliance monitoring, and safety training and communication.</p>
+        <p>From <strong>22 February 2026</strong>, Part-IS adds an <strong>information security management system</strong> (145.A.200A). It covers cyber and information risks that could affect aviation safety.</p>
+      </div>
+      <div class="prose">
+        <p>The <strong>Maintenance Organisation Exposition</strong> (145.A.70) is the organisation&rsquo;s rulebook. It includes the accountable manager&rsquo;s statement and safety policy, nominated persons and the organisation chart, certifying staff, man-hour resources, facilities and scope of work, the procedure for notifying changes, and all maintenance and management system procedures. The authority audits against it.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Oversight &amp; findings</h3><span class="eyebrow">Section B &middot; 145.B.305 &middot; 145.B.350</span></div>
+    <div class="sev">
+      <article class="crit"><span class="pill crit">Level 1 finding</span><p>A significant non-compliance that lowers safety or seriously hazards flight safety. The authority acts immediately to limit, suspend or revoke the approval.</p></article>
+      <article><span class="pill">Level 2 finding</span><p>Any other non-compliance. The organisation gets a corrective action period of up to 3 months at first, which can be extended if a corrective action plan is agreed.</p></article>
+      <article><span class="pill ok">Oversight cycle</span><b class="big tnum">24 mo</b><p>Standard audit planning cycle. It can be extended to 36 months if set conditions are met, or 48 months with continuous reporting to the authority.</p></article>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Contents of Part-145</h3><span class="eyebrow">Section A &middot; after Reg. (EU) 2021/1963 and 2023/203</span></div>
+    <ul class="points">
+      <li class="hd">Approval &amp; resources</li>
+      <li><b>145.A.10</b><span>Scope</span></li>
+      <li><b>145.A.15</b><span>Application for an organisation certificate</span></li>
+      <li><b>145.A.20</b><span>Terms of approval and scope of work</span></li>
+      <li><b>145.A.25</b><span>Facility requirements</span></li>
+      <li><b>145.A.30</b><span>Personnel requirements</span></li>
+      <li><b>145.A.35</b><span>Certifying staff and support staff</span></li>
+      <li><b>145.A.37</b><span>Airworthiness review staff</span></li>
+      <li><b>145.A.40</b><span>Equipment and tools</span></li>
+      <li><b>145.A.42</b><span>Components</span></li>
+      <li><b>145.A.45</b><span>Maintenance data</span></li>
+      <li class="hd">Doing the work</li>
+      <li><b>145.A.47</b><span>Production planning</span></li>
+      <li><b>145.A.48</b><span>Performance of maintenance</span></li>
+      <li><b>145.A.50</b><span>Certification of maintenance</span></li>
+      <li><b>145.A.55</b><span>Record-keeping</span></li>
+      <li><b>145.A.60</b><span>Occurrence reporting</span></li>
+      <li><b>145.A.65</b><span>Maintenance procedures</span></li>
+      <li class="hd">Exposition, privileges &amp; changes</li>
+      <li><b>145.A.70</b><span>Maintenance organisation exposition (MOE)</span></li>
+      <li><b>145.A.75</b><span>Privileges of the organisation</span></li>
+      <li><b>145.A.85</b><span>Changes to the organisation</span></li>
+      <li><b>145.A.90</b><span>Continued validity</span></li>
+      <li><b>145.A.95</b><span>Findings and observations</span></li>
+      <li><b>145.A.120</b><span>Means of compliance</span></li>
+      <li><b>145.A.140</b><span>Access</span></li>
+      <li><b>145.A.155</b><span>Immediate reaction to a safety problem</span></li>
+      <li class="hd">Management system</li>
+      <li><b>145.A.200</b><span>Management system</span><span class="flag new">SMS</span></li>
+      <li><b>145.A.200A</b><span>Information security management system</span><span class="flag new">Part-IS</span></li>
+      <li><b>145.A.202</b><span>Internal safety reporting scheme</span><span class="flag new">SMS</span></li>
+      <li><b>145.A.205</b><span>Contracting and subcontracting</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= HANGAR FLOOR ================= -->
+<section class="sec" id="floor" aria-labelledby="floor-title">
+  <header class="sec-head">
+    <div class="numeral"><small>ATA CHAPTER</small>05</div>
+    <div class="intro">
+      <h2 class="h2" id="floor-title">On the hangar floor</h2>
+      <p>The regulations decide who may sign. The daily work runs on the manufacturer&rsquo;s data, an approved maintenance programme, and the discipline of the people doing it. ATA chapter 05 covers time limits and maintenance checks.</p>
+    </div>
+  </header>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Maintenance checks</h3><span class="eyebrow">Typical airliner pattern &middot; illustrative</span></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Check</th><th>Where</th><th>Typical interval</th><th>What happens</th></tr></thead>
+        <tbody>
+          <tr><td class="m">Transit / daily</td><td>Line</td><td>Every turnaround or day</td><td>Walk-round inspection, fluid levels, tyres and brakes, and a review of tech log entries</td></tr>
+          <tr><td class="m">Weekly</td><td>Line</td><td>About every 7&ndash;8 days</td><td>A more detailed walk-round, servicing, lubrication, and cabin and emergency equipment checks</td></tr>
+          <tr><td class="m">A-check</td><td>Line</td><td>A few hundred flight hours, often 6&ndash;12 weeks</td><td>An overnight task package of inspections, servicing and operational tests</td></tr>
+          <tr><td class="m">C-check</td><td>Base</td><td>About 18&ndash;36 months</td><td>1&ndash;4 weeks out of service, with panels opened for detailed zonal and structural inspections and modifications</td></tr>
+          <tr class="hl"><td class="m">Heavy check</td><td>Base</td><td>About 6&ndash;12 years</td><td>The aircraft is largely stripped for in-depth structural and corrosion inspection over several weeks</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Real intervals come from each type&rsquo;s Maintenance Planning Document and the operator&rsquo;s approved aircraft maintenance programme. Many modern types use task-based or phased packages instead of letter checks.</p>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">The paperwork that flies</h3><span class="eyebrow">Maintenance data &middot; 145.A.45</span></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Document</th><th>Name</th><th>Issued by</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td class="m">AD</td><td>Airworthiness Directive</td><td>EASA or the State of Design</td><td><strong>Mandatory</strong></td></tr>
+          <tr><td class="m">SB</td><td>Service Bulletin</td><td>Type certificate holder or manufacturer</td><td>Recommended; mandatory when an AD calls it up</td></tr>
+          <tr><td class="m">MPD</td><td>Maintenance Planning Document</td><td>Type certificate holder</td><td>Source for the maintenance programme</td></tr>
+          <tr><td class="m">AMP</td><td>Aircraft Maintenance Programme</td><td>Operator or CAMO, approved by the authority</td><td>Defines what is done and when</td></tr>
+          <tr><td class="m">AMM</td><td>Aircraft Maintenance Manual</td><td>Type certificate holder</td><td>Approved procedures (instructions for continued airworthiness)</td></tr>
+          <tr><td class="m">IPC</td><td>Illustrated Parts Catalogue</td><td>Type certificate holder</td><td>Part numbers, effectivity, interchangeability</td></tr>
+          <tr><td class="m">SRM</td><td>Structural Repair Manual</td><td>Type certificate holder</td><td>Damage limits and approved repairs</td></tr>
+          <tr><td class="m">WDM</td><td>Wiring Diagram Manual</td><td>Type certificate holder</td><td>Wiring and EWIS data</td></tr>
+          <tr><td class="m">FIM / TSM</td><td>Fault Isolation / Troubleshooting Manual</td><td>Type certificate holder</td><td>Fault isolation procedures</td></tr>
+          <tr><td class="m">CMM</td><td>Component Maintenance Manual</td><td>Component manufacturer</td><td>Off-aircraft shop maintenance</td></tr>
+          <tr><td class="m">MEL</td><td>Minimum Equipment List</td><td>Operator, based on the MMEL and approved by the authority</td><td>Dispatch with inoperative items</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">The dirty dozen</h3><span class="eyebrow">Module 9 &middot; human factors</span></div>
+    <p class="prose">These are twelve common preconditions for maintenance error, first described by Gordon Dupont at Transport Canada. Each comes with a safety net.</p>
+    <div class="dozen">
+      <div><b>Lack of communication</b><span>Give clear, written shift handovers. Never assume.</span></div>
+      <div><b>Complacency</b><span>Expect to find a fault. Sign only for what you saw.</span></div>
+      <div><b>Lack of knowledge</b><span>Use current data and ask when you&rsquo;re unsure.</span></div>
+      <div><b>Distraction</b><span>Mark where you stopped, then restart a few steps back.</span></div>
+      <div><b>Lack of teamwork</b><span>Share the plan. Everyone owns safety.</span></div>
+      <div><b>Fatigue</b><span>Know the signs and get an independent inspection.</span></div>
+      <div><b>Lack of resources</b><span>Plan parts and tools ahead. Don&rsquo;t improvise.</span></div>
+      <div><b>Pressure</b><span>Speak up. The schedule never outranks safety.</span></div>
+      <div><b>Lack of assertiveness</b><span>Refuse to accept a standard you know is wrong.</span></div>
+      <div><b>Stress</b><span>Step back, take a breath and think it through.</span></div>
+      <div><b>Lack of awareness</b><span>Ask what else this job could affect.</span></div>
+      <div><b>Norms</b><span>Follow the procedure, not the shop-floor shortcut.</span></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">ATA chapters</h3><span class="eyebrow">ATA iSpec 2200 &middot; shared numbering for manuals, parts and defects</span></div>
+    <div class="ata">
+      <div><b>05</b>Time limits &amp; checks</div><div><b>12</b>Servicing</div><div><b>20</b>Standard practices, airframe</div><div><b>21</b>Air conditioning</div><div><b>22</b>Auto flight</div><div><b>23</b>Communications</div>
+      <div><b>24</b>Electrical power</div><div><b>25</b>Equipment &amp; furnishings</div><div><b>26</b>Fire protection</div><div><b>27</b>Flight controls</div><div><b>28</b>Fuel</div><div><b>29</b>Hydraulic power</div>
+      <div><b>30</b>Ice &amp; rain protection</div><div><b>31</b>Indicating &amp; recording</div><div><b>32</b>Landing gear</div><div><b>33</b>Lights</div><div><b>34</b>Navigation</div><div><b>35</b>Oxygen</div>
+      <div><b>36</b>Pneumatic</div><div><b>38</b>Water &amp; waste</div><div><b>45</b>Central maintenance</div><div><b>46</b>Information systems</div><div><b>49</b>APU</div><div><b>51</b>Standard practices &amp; structures</div>
+      <div><b>52</b>Doors</div><div><b>53</b>Fuselage</div><div><b>54</b>Nacelles &amp; pylons</div><div><b>55</b>Stabilizers</div><div><b>56</b>Windows</div><div><b>57</b>Wings</div>
+      <div><b>61</b>Propellers</div><div><b>70</b>Standard practices, engine</div><div><b>71</b>Power plant</div><div><b>72</b>Engine</div><div><b>73</b>Engine fuel &amp; control</div><div><b>74</b>Ignition</div>
+      <div><b>75</b>Engine air</div><div><b>76</b>Engine controls</div><div><b>77</b>Engine indicating</div><div><b>78</b>Exhaust</div><div><b>79</b>Oil</div><div><b>80</b>Starting</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GLOSSARY & FAQ ================= -->
+<section class="sec alt" id="gm" aria-labelledby="gm-title">
+  <header class="sec-head">
+    <div class="numeral"><small>GUIDANCE MATERIAL</small>GM</div>
+    <div class="intro">
+      <h2 class="h2" id="gm-title">Glossary &amp; questions</h2>
+      <p>Short definitions for the acronyms that fill a tech log, and plain answers to the questions people ask most about European licences.</p>
+    </div>
+  </header>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Glossary</h3><span class="eyebrow" id="gl-count" aria-live="polite">32 terms</span></div>
+    <div class="gl-tools"><label class="sr-only" for="gl-q">Filter glossary</label><input id="gl-q" type="search" placeholder="Filter terms, e.g. CRS or wiring" autocomplete="off"></div>
+    <dl class="glossary" id="glossary">
+      <div><dt>AD</dt><dd>Airworthiness Directive: a mandatory action to restore an acceptable level of safety.</dd></div>
+      <div><dt>AMC</dt><dd>Acceptable Means of Compliance: EASA&rsquo;s non-binding, accepted way to meet a rule.</dd></div>
+      <div><dt>AML</dt><dd>Aircraft Maintenance Licence issued under Part-66 on EASA Form 26.</dd></div>
+      <div><dt>AMP</dt><dd>Aircraft Maintenance Programme: the approved list of tasks and intervals for an aircraft.</dd></div>
+      <div><dt>ARC</dt><dd>Airworthiness Review Certificate, issued after an airworthiness review and normally valid for one year.</dd></div>
+      <div><dt>Base maintenance</dt><dd>Maintenance beyond line level, usually in a hangar with the aircraft out of service.</dd></div>
+      <div><dt>CAMO</dt><dd>Continuing Airworthiness Management Organisation, approved under Part-CAMO.</dd></div>
+      <div><dt>CAO</dt><dd>Combined Airworthiness Organisation for lighter aircraft, approved under Part-CAO.</dd></div>
+      <div><dt>CDCCL</dt><dd>Critical Design Configuration Control Limitation: a fuel-tank safety feature that maintenance must preserve.</dd></div>
+      <div><dt>Certification authorisation</dt><dd>The organisation-issued scope that lets licensed staff sign on its behalf.</dd></div>
+      <div><dt>CMPA</dt><dd>Complex motor-powered aircraft, e.g. aeroplanes above 5&#8239;700 kg MTOM, with more than 19 seats, two-pilot crew, turbojets or more than one turboprop.</dd></div>
+      <div><dt>Competent authority</dt><dd>The national aviation authority, or EASA for organisations outside the EASA states, that approves and oversees.</dd></div>
+      <div><dt>CRS</dt><dd>Certificate of Release to Service, issued after maintenance and before flight.</dd></div>
+      <div><dt>EASA Form 1</dt><dd>Authorised Release Certificate for a component.</dd></div>
+      <div><dt>EWIS</dt><dd>Electrical Wiring Interconnection System: the wiring, connectors and supports on an aircraft.</dd></div>
+      <div><dt>GM</dt><dd>Guidance Material: explains the meaning of a rule or its AMC.</dd></div>
+      <div><dt>HF</dt><dd>Human factors: Module 9 and a recurring training subject for all staff.</dd></div>
+      <div><dt>ICA</dt><dd>Instructions for Continued Airworthiness, from the design approval holder.</dd></div>
+      <div><dt>Line maintenance</dt><dd>Maintenance before flight to make sure the aircraft is fit for the intended flight.</dd></div>
+      <div><dt>MEL / MMEL</dt><dd>(Master) Minimum Equipment List: what may be inoperative for dispatch, and under what conditions.</dd></div>
+      <div><dt>MOE</dt><dd>Maintenance Organisation Exposition: the Part-145 organisation&rsquo;s approved manual (145.A.70).</dd></div>
+      <div><dt>MPD</dt><dd>Maintenance Planning Document from the type certificate holder.</dd></div>
+      <div><dt>MTO / MTOE</dt><dd>Maintenance Training Organisation and its exposition under Part-147.</dd></div>
+      <div><dt>MTOM</dt><dd>Maximum Take-Off Mass, used to draw the lines between ratings and licences.</dd></div>
+      <div><dt>NDT</dt><dd>Non-destructive testing, e.g. eddy current, ultrasonic or X-ray inspection. Part-145 rating D1.</dd></div>
+      <div><dt>OJT</dt><dd>On-the-job training for the first type rating in a licence category or subcategory.</dd></div>
+      <div><dt>Part-IS</dt><dd>EU information security requirements, applicable to Part-145 organisations from 22 February 2026.</dd></div>
+      <div><dt>SB</dt><dd>Service Bulletin: a manufacturer&rsquo;s recommended inspection or modification.</dd></div>
+      <div><dt>SMS</dt><dd>Safety Management System, part of the Part-145 management system since December 2022.</dd></div>
+      <div><dt>Support staff</dt><dd>B1/B2 staff in base maintenance who confirm tasks in their specialty before the category C release.</dd></div>
+      <div><dt>TC / STC</dt><dd>(Supplemental) Type Certificate: the design approval that maintenance data flows from.</dd></div>
+      <div><dt>Type rating</dt><dd>An aircraft rating on the licence that allows certification on a specific type.</dd></div>
+    </dl>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><h3 class="h3">Frequently asked</h3><span class="eyebrow">Plain answers</span></div>
+    <div class="faq">
+      <details open><summary>Is my EASA licence valid in every European country?</summary><div class="ans"><p>It is recognised in all 31 EASA member states: the 27 EU countries plus Iceland, Liechtenstein, Norway and Switzerland. Your employer still issues its own certification authorisation, and you must be able to work in the language of the maintenance data. Since Brexit, the UK CAA issues its own UK Part-66 licences, and the two systems no longer recognise each other automatically.</p></div></details>
+      <details><summary>Do I have to attend a Part-147 school?</summary><div class="ans"><p>No. You can study on your own and sit the module exams with the competent authority. An approved basic course shortens the experience you need, for example from 5 years to 2 for B1.1 or B2.</p></div></details>
+      <details><summary>Can a B2 engineer release an engine change?</summary><div class="ans"><p>No. Mechanical work on the powerplant is B1 territory. A B2 covers avionic and electrical systems, plus electrical and avionics tasks within powerplant and mechanical systems that need only simple tests to prove serviceability.</p></div></details>
+      <details><summary>What is the difference between B1/B2 and C?</summary><div class="ans"><p>B1 and B2 engineers certify line maintenance and act as support staff for their tasks in base maintenance. A category C engineer issues the release to service after base maintenance, for the aircraft in its entirety.</p></div></details>
+      <details><summary>My module exams are old. Do they still count?</summary><div class="ans"><p>Each module must have been passed within 10 years before you apply for the licence or add a category. Older passes can still be credited by the authority through an examination credit report. Modules already used for a licence you hold don&rsquo;t expire.</p></div></details>
+      <details><summary>Is EASA Part-147 the same as FAA Part 147?</summary><div class="ans"><p>No, despite the shared number. FAA 14 CFR Part 147 certifies aviation maintenance technician schools for the US A&amp;P certificate, and FAA Part 145 covers repair stations. The EU&ndash;US bilateral agreement lets each side accept the other&rsquo;s repair stations under special conditions, but the licences are not interchangeable.</p></div></details>
+      <details><summary>How long does it take to certify on an airliner?</summary><div class="ans"><p>With an approved Part-147 B1.1 or B2 course (at least 2&#8239;400 hours), the legal minimum is 2 years of practical experience. Without formal technical training, it is 5 years. After that you still need type training, OJT on your first type, and an authorisation from a Part-145 organisation before you sign your first CRS.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div>
+    <h2>Before you rely on it</h2>
+    <p>This page is an informative summary for students, engineers and anyone curious about European aircraft maintenance. It is not the legal text and does not replace the AMC, GM or your authority&rsquo;s guidance. Rules change, so check the current consolidated regulation and EASA Easy Access Rules before making licensing, training or approval decisions.</p>
+    <p>Reference state: Reg. (EU) No 1321/2014 as consolidated on 12 June 2024 (including Reg. (EU) 2023/989), plus Reg. (EU) 2023/203 (Part-IS) applicable from 22 February 2026. Checks, documents and human factors content describe typical industry practice.</p>
+  </div>
+  <div>
+    <h2>Sources</h2>
+    <ul>
+      <li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02014R1321-20240612" target="_blank" rel="noopener">Reg. (EU) No 1321/2014, consolidated text (EUR-Lex)</a></li>
+      <li><a href="https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-continuing-airworthiness-regulation-eu-no-13212014" target="_blank" rel="noopener">EASA Easy Access Rules for Continuing Airworthiness</a></li>
+      <li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023R0989" target="_blank" rel="noopener">Reg. (EU) 2023/989: Part-66 and Part-147 update</a></li>
+      <li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32021R1963" target="_blank" rel="noopener">Reg. (EU) 2021/1963: Part-145 management system</a></li>
+      <li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023R0203" target="_blank" rel="noopener">Reg. (EU) 2023/203: Part-IS</a></li>
+    </ul>
+  </div>
+</footer>
+
+</main>
+</div>
+
+<style>[hidden]{display:none !important}</style>
+<script>
+(function(){
+  var MODS=[["Mathematics","Maths"],["Physics","Physics"],["Electrical fundamentals","Electrical"],["Electronics fundamentals","Electronics"],["Digital techniques / electronic instrument systems","Digital"],["Materials and hardware","Materials"],["Maintenance practices","Practices"],["Basic aerodynamics","Aero"],["Human factors","Human factors"],["Aviation legislation","Legislation"],["Aeroplane aerodynamics, structures and systems","Aeroplane"],["Helicopter aerodynamics, structures and systems","Helicopter"],["Aircraft aerodynamics, structures and systems","Aircraft systems"],["Propulsion","Propulsion"],["Gas turbine engine","Gas turbine"],["Piston engine","Piston"],["Propeller","Propeller"]];
+  var CORE=[1,2,3,4,5,6,7,8,9,10], ACORE=[1,2,3,5,6,7,8,9,10];
+  var SETS={"A1":ACORE.concat([11,15,17]),"A2":ACORE.concat([11,16,17]),"A3":ACORE.concat([12,15]),"A4":ACORE.concat([12,16]),"B1.1":CORE.concat([11,15,17]),"B1.2":CORE.concat([11,16,17]),"B1.3":CORE.concat([12,15]),"B1.4":CORE.concat([12,16]),"B2":CORE.concat([13,14]),"B2L":CORE.slice(),"B3":CORE.concat([11,16,17])};
+  var PART={"B2L":[13,14]};
+  var COLS=["A1","A2","A3","A4","B1.1","B1.2","B1.3","B1.4","B2","B2L","B3"];
+  var HOURS={"A1":[800,"30&ndash;35%"],"A2":[650,"30&ndash;35%"],"A3":[800,"30&ndash;35%"],"A4":[800,"30&ndash;35%"],"B1.1":[2400,"50&ndash;60%"],"B1.2":[2000,"50&ndash;60%"],"B1.3":[2400,"50&ndash;60%"],"B1.4":[2400,"50&ndash;60%"],"B2":[2400,"50&ndash;60%"],"B2L":[1500,"50&ndash;60%"],"B3":[1000,"50&ndash;60%"]};
+  var R3=["No relevant technical training","Skilled-worker training in a technical trade","Part-147 approved basic course"];
+  function three(a,b,c){return [[R3[0],a],[R3[1],b],[R3[2],c]];}
+  var STD="All experience must fall within the last 10 years, with at least 1 year of recent experience on the category sought.";
+
+  var CATS={
+    A:{role:"Line maintenance certifying mechanic",sel:true,def:"A1",subsLabel:"Subcategories",
+      subs:[["A1","Aeroplanes, turbine"],["A2","Aeroplanes, piston"],["A3","Helicopters, turbine"],["A4","Helicopters, piston"]],
+      priv:["Issue a CRS after minor scheduled line maintenance and simple defect rectification","Only for tasks specifically endorsed on the certification authorisation (145.A.35)","Only for work you personally performed in the organisation that issued it"],
+      exp:function(){return three(3,2,1);},
+      rating:"No aircraft rating on the licence. Category A certifies after task training on the aircraft, under 145.A.35."},
+    B1:{role:"Maintenance certifying technician: mechanical",sel:true,def:"B1.1",subsLabel:"Subcategories",
+      subs:[["B1.1","Aeroplanes, turbine"],["B1.2","Aeroplanes, piston"],["B1.3","Helicopters, turbine"],["B1.4","Helicopters, piston"]],
+      priv:["CRS and B1 support staff for aircraft structure, powerplant, and mechanical and electrical systems","Avionic work needing only simple tests to prove serviceability, with no troubleshooting","Includes the corresponding A subcategory"],
+      exp:function(s){return (s==="B1.1"||s==="B1.3")?three(5,3,2):three(3,2,1);},
+      rating:"Aircraft ratings: type rating for Group 1; type, manufacturer subgroup or full subgroup for Group 2; type or full group for Group 3."},
+    B2:{role:"Maintenance certifying technician: avionics",sel:false,def:"B2",subsLabel:"Scope",
+      subs:[["B2","Aeroplanes and helicopters"]],
+      priv:["CRS and B2 support staff for avionic and electrical systems","Electrical and avionics tasks within powerplant and mechanical systems needing only simple tests","CRS for minor scheduled line maintenance and simple defect rectification endorsed on the authorisation","Does not include any A subcategory"],
+      exp:function(){return three(5,3,2);},
+      rating:"Aircraft ratings as for B1, plus the full group rating for Group 4."},
+    B2L:{role:"Avionics licence for aircraft outside Group 1",sel:false,def:"B2L",subsLabel:"System ratings",
+      subs:[["Com/Nav","system rating"],["Instruments","system rating"],["Autoflight","system rating"],["Surveillance","system rating"],["Airframe systems","system rating"]],
+      priv:["CRS and B2L support staff for electrical systems","Avionics maintenance within the system ratings endorsed on the licence","With the airframe systems rating: electrical and avionics tasks within powerplant and mechanical systems needing only simple tests"],
+      exp:function(){return three(3,2,1);},
+      expNote:"Experience must cover the system ratings sought, and each rating added later needs 3 months of relevant experience.",
+      hNote:"Plus hours per system rating: com/nav 90, instruments 55, autoflight 80, surveillance 40, airframe systems 100.",
+      modNote:"Module 13 is examined by submodule for each system rating. Module 14 applies only to the instruments and airframe systems ratings.",
+      rating:"Aircraft ratings: manufacturer subgroup or full subgroup for Group 2, and full group for Groups 3 and 4."},
+    B3:{role:"Certifying technician: piston-engine non-pressurised aeroplanes of 2&#8239;000 kg MTOM and below",sel:false,def:"B3",subsLabel:"Scope",
+      subs:[["B3","Piston, non-pressurised, &le; 2&#8239;000 kg"]],
+      priv:["CRS and B3 support staff for aeroplane structure, powerplant, and mechanical and electrical systems","Avionics work needing only simple tests, with no troubleshooting"],
+      exp:function(){return three(3,2,1);},
+      rating:"A single rating: &lsquo;piston-engine non-pressurised aeroplanes of 2&#8239;000 kg MTOM and below&rsquo;."},
+    L:{role:"Light aircraft: sailplanes, ELA1 aeroplanes, balloons and airships",sel:false,def:"L",subsLabel:"Subcategories",
+      subs:[["L1C","Composite sailplanes"],["L1","Sailplanes"],["L2C","Composite powered sailplanes &amp; ELA1 aeroplanes"],["L2","Powered sailplanes &amp; ELA1 aeroplanes"],["L3H","Hot-air balloons"],["L3G","Gas balloons"],["L4H","Hot-air airships"],["L4G","ELA2 gas airships"],["L5","Gas airships other than ELA2"]],
+      priv:["CRS and L support staff for structure, powerplant, and mechanical and electrical systems","Work on radio, ELT and transponder systems","Other avionics work needing only simple tests","L2 includes L1, and L2C includes L1C"],
+      exp:function(){return [["Practical experience across the subcategory",2],["With a limitation entered on the licence",1]];},
+      expNote:"Experience must cover a representative cross-section of maintenance on the subcategory.",
+      hNote:"Category L follows the Part-66 Appendix VII syllabus. Its exams may also be held by an organisation agreed with the authority.",
+      modNote:"Category L has its own syllabus (Part-66 Appendix VII) and exam standard (Appendix VIII) instead of modules 1&ndash;17.",
+      rating:"Each subcategory carries its own rating, such as &lsquo;hot-air balloons&rsquo;. L5 needs an airship type rating."},
+    C:{role:"Base maintenance certifying engineer",sel:false,def:"C",subsLabel:"Scope",
+      subs:[["CMPA","Complex motor-powered aircraft"],["Other","Other than CMPA"]],
+      priv:["CRS after base maintenance, for the aircraft in its entirety","A C licence for complex motor-powered aircraft also covers other aircraft"],
+      exp:function(){return [["CMPA, after B1.1, B1.3 or B2 privileges",3],["CMPA, after B1.2, B1.4 or L5 privileges",5],["Other aircraft, after B1, B2, B2L, B3 or L privileges",3],["Academic route: relevant technical degree",3]];},
+      expNote:"CMPA routes include 12 months as base maintenance support staff, and the other-aircraft route includes 6 months. The degree route includes 6 months taking part in base maintenance tasks.",
+      hNote:"Part-147 sets no basic course length for category C.",
+      modNote:"Category C has no module set of its own. Knowledge comes from a B1, B2, B2L, B3 or L licence, or through the academic-degree route.",
+      rating:"Type ratings as for B1 and B2. OJT is not required. Degree-route engineers take their first type evaluation at B1 or B2 level."}
+  };
+
+  function $(id){return document.getElementById(id);}
+  function yrs(y){return y===1?"1 yr":y+" yrs";}
+  function hrs(h){return (h>=1000?String(h).replace(/\B(?=(\d{3})+$)/," "):String(h))+" h";}
+  function row(label,w,val,cls){return '<div class="meter-row"><span class="lab">'+label+'</span><div class="track'+(cls||"")+'"><i style="width:0" data-w="'+w+'"></i></div><b>'+val+'</b></div>';}
+
+  var modlist=$("ex-modlist");
+  modlist.innerHTML=MODS.map(function(m,i){return '<li title="Module '+(i+1)+': '+m[0]+'"><b>'+(i+1)+'</b><span>'+m[1]+'</span></li>';}).join("");
+  var modItems=modlist.children;
+
+  var tbody=document.querySelector("#mx tbody");
+  tbody.innerHTML=MODS.map(function(m,i){
+    var n=i+1;
+    return "<tr><td><b>"+n+"</b>"+m[0]+"</td>"+COLS.map(function(c){
+      var p=PART[c]&&PART[c].indexOf(n)>-1, y=SETS[c].indexOf(n)>-1;
+      return '<td data-col="'+c+'">'+(p?'<span class="p" aria-label="partly required">&#9680;</span>':y?'<span class="y" aria-label="required">&#9679;</span>':'<span class="n" aria-label="not required">&middot;</span>')+"</td>";
+    }).join("")+"</tr>";
+  }).join("");
+  var mxCells=document.querySelectorAll("#mx [data-col]");
+
+  var tabs=document.querySelectorAll(".ex-tabs [role=tab]");
+  var state={cat:"B1",sub:"B1.1"};
+
+  function render(cat,sub){
+    var c=CATS[cat]; sub=sub||c.def; state={cat:cat,sub:sub};
+    tabs.forEach(function(t){t.setAttribute("aria-selected",t.dataset.cat===cat?"true":"false"); t.tabIndex=t.dataset.cat===cat?0:-1;});
+    $("ex-big").textContent=c.sel?sub:cat;
+    $("ex-role").innerHTML=c.role;
+    $("ex-subs-label").textContent=c.subsLabel;
+    $("ex-subs").innerHTML=c.subs.map(function(s){
+      if(c.sel) return '<button type="button" class="chip" data-sub="'+s[0]+'" aria-pressed="'+(s[0]===sub)+'">'+s[0]+'<small>'+s[1]+'</small></button>';
+      return '<span class="chip">'+s[0]+'<small>'+s[1]+'</small></span>';
+    }).join("");
+    $("ex-priv").innerHTML=c.priv.map(function(p){return "<li>"+p+"</li>";}).join("");
+    $("ex-rating").innerHTML=c.rating;
+    $("ex-exp").innerHTML=c.exp(sub).map(function(r){return row(r[0],r[1]/5*100,yrs(r[1]));}).join("");
+    $("ex-expnote").innerHTML=c.expNote||STD;
+    var key=c.sel?sub:(SETS[cat]?cat:null);
+    if(key&&HOURS[key]){
+      var h=HOURS[key];
+      $("ex-hours").innerHTML=row("Minimum total, of which "+h[1]+" theory",h[0]/2400*100,hrs(h[0])," p")+'<div class="scale" aria-hidden="true"><span>0</span><span>1&#8239;200</span><span>2&#8239;400 h</span></div>';
+      $("ex-hnote").innerHTML=c.hNote||"Completing an approved course reduces the experience you need, as shown above.";
+    } else {
+      $("ex-hours").innerHTML="";
+      $("ex-hnote").innerHTML=c.hNote;
+    }
+    var set=key?SETS[key]:[], part=key&&PART[key]?PART[key]:[];
+    $("ex-mods").classList.toggle("na",!key);
+    for(var i=0;i<modItems.length;i++){
+      var n=i+1, isP=part.indexOf(n)>-1, isOn=!isP&&set.indexOf(n)>-1;
+      modItems[i].classList.toggle("on",isOn);
+      modItems[i].classList.toggle("part",isP);
+    }
+    $("ex-mnote").innerHTML=c.modNote||("Highlighted: the "+set.length+" modules required for "+key+". The knowledge level for each module depends on the category.");
+    mxCells.forEach(function(el){el.classList.toggle("col-on",el.getAttribute("data-col")===key);});
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      document.querySelectorAll("#explorer .track i").forEach(function(i){i.style.width=i.getAttribute("data-w")+"%";});
+    });});
+  }
+
+  tabs.forEach(function(t,idx){
+    t.addEventListener("click",function(){render(t.dataset.cat);});
+    t.addEventListener("keydown",function(e){
+      var d=e.key==="ArrowRight"?1:e.key==="ArrowLeft"?-1:0; if(!d) return;
+      e.preventDefault(); var nx=tabs[(idx+d+tabs.length)%tabs.length]; nx.focus(); render(nx.dataset.cat);
+    });
+  });
+  $("ex-subs").addEventListener("click",function(e){
+    var b=e.target.closest("button[data-sub]"); if(b) render(state.cat,b.getAttribute("data-sub"));
+  });
+  render("B1","B1.1");
+
+  /* active section in the rail */
+  var rail=document.querySelector(".rail"), links=document.querySelectorAll(".rail nav a"), map={};
+  links.forEach(function(a){map[a.getAttribute("href").slice(1)]=a;});
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting) return;
+        var a=map[e.target.id]; if(!a) return;
+        links.forEach(function(l){l.classList.remove("on");});
+        a.classList.add("on");
+        if(rail.scrollWidth>rail.clientWidth) rail.scrollLeft=a.offsetLeft-rail.clientWidth/2+a.offsetWidth/2;
+      });
+    },{rootMargin:"-35% 0px -60% 0px"});
+    Object.keys(map).forEach(function(id){var s=$(id); if(s) io.observe(s);});
+  }
+
+  /* glossary filter */
+  var q=$("gl-q"), items=document.querySelectorAll("#glossary > div"), count=$("gl-count");
+  count.textContent=items.length+" terms";
+  q.addEventListener("input",function(){
+    var v=q.value.trim().toLowerCase(), n=0;
+    items.forEach(function(d){var m=!v||d.textContent.toLowerCase().indexOf(v)>-1; d.hidden=!m; if(m) n++;});
+    count.textContent=n===0?"No matching terms. Try another word":(n+(n===1?" term":" terms"));
+  });
+})();
+</script>
+</body>
+</html>
