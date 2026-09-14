@@ -2,31 +2,46 @@
 
 **Live site:** https://mhmdnab.github.io/release-to-service/
 
-A one-page, illustrated guide to aircraft maintenance engineering in Europe under the EASA continuing airworthiness rules, Regulation (EU) No 1321/2014:
+An illustrated guide to aircraft maintenance engineering in Europe under the EASA continuing airworthiness rules, Regulation (EU) No 1321/2014:
 
-- **Part-147**: maintenance training organisations, minimum basic course hours, examinations, type training and OJT
-- **Part-66**: aircraft maintenance licence categories, with an interactive licence explorer, module matrix, experience routes and aircraft ratings
-- **Part-145**: maintenance organisation approvals, classes and ratings, certifying staff, release to service, management system and oversight
-- **Hangar floor**: maintenance checks, maintenance documents, human factors (the dirty dozen) and ATA chapters
-- **Glossary and FAQ**
+- **The system** (`/system`): the three layers of rules, the annexes, how the Parts connect, and a timeline
+- **Part-147** (`/part-147`): maintenance training organisations, minimum basic course hours, examinations, type training and OJT
+- **Part-66** (`/part-66`): aircraft maintenance licence categories, with an interactive licence explorer, module matrix, experience routes and aircraft ratings
+- **Part-145** (`/part-145`): maintenance organisation approvals, classes and ratings, certifying staff, release to service, management system and oversight
+- **Hangar floor** (`/hangar-floor`): maintenance checks, maintenance documents, human factors (the dirty dozen) and ATA chapters
+- **Glossary and FAQ** (`/glossary`)
 
-It is a static site: a single `index.html` with no build step and no dependencies. The only external request is to Google Fonts.
+It is a [Next.js](https://nextjs.org) app written in TypeScript and exported as static HTML, so it needs no server. Fonts are self-hosted and the site makes no external requests.
+
+## Project layout
+
+- `app/`: one route per section, plus the root layout, 404 page, sitemap and robots
+- `components/`: the page shell (rail, reading progress, full-screen menu), section and table building blocks, and the interactive licence explorer, module matrix and glossary filter
+- `lib/sections.ts`: the site map. Every route, navigation label and in-page anchor is declared here and type-checked where it is used
+- `lib/licence.ts`: the Part-66 data behind the explorer, the matrix and the course-hours chart
 
 ## Run locally
 
-Open `index.html` in a browser, or serve the folder:
-
 ```bash
-python3 -m http.server 8000
+npm install
+npm run dev
 ```
 
-Then visit http://localhost:8000.
+Then visit http://localhost:3000.
+
+Other scripts:
+
+```bash
+npm run typecheck   # generate route types and run tsc
+npm run lint        # eslint
+npm run build       # static export to out/
+```
 
 ## Deploy
 
-The site is published with **GitHub Pages** from the `main` branch (repository root), and every push to `main` redeploys it.
+The site is published with **GitHub Pages** by the workflow in `.github/workflows/deploy.yml`. Every push to `main` type-checks, lints, builds with `NEXT_BASE_PATH=/release-to-service`, and deploys the `out/` folder. In the repository settings, set the Pages source to **GitHub Actions**.
 
-Any other static host works too. On Vercel or Netlify, import the repository with no framework, no build command, and the project root as the output directory.
+Any static host works too. On Vercel or Netlify, import the repository as a Next.js project and leave `NEXT_BASE_PATH` unset.
 
 ## Sources
 

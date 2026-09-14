@@ -269,11 +269,25 @@ button.chip:hover{border-color:var(--ink)}
 .track.p i{background:var(--primer)}
 .meter-row b{font-family:var(--f-mono); font-weight:600; font-size:.82rem; text-align:right; white-space:nowrap}
 .scale{display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:.64rem; color:var(--muted); margin-right:calc(4.8em + 12px)}
-.modstrip{grid-column:1/-1; border-top:1px solid var(--line); padding:20px 26px 24px; display:flex; flex-direction:column; gap:12px; overflow-x:auto}
-.modstrip ol{list-style:none; display:grid; grid-template-columns:repeat(17,minmax(50px,1fr)); gap:4px; min-width:900px}
-.modstrip li{border:1px solid var(--line); padding:8px 6px; display:flex; flex-direction:column; gap:5px; min-height:88px; color:var(--muted); transition:background .25s,color .25s,border-color .25s}
-.modstrip li b{font-family:var(--f-display); font-weight:900; font-size:1.7rem; line-height:1}
-.modstrip li span{font-family:var(--f-mono); font-size:.6rem; line-height:1.25}
+.modstrip{grid-column:1/-1; border-top:1px solid var(--line); padding:20px 26px 24px; display:flex; flex-direction:column; gap:12px; container:modstrip / inline-size}
+.modstrip ol{list-style:none; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px}
+.modstrip li{border:1px solid var(--line); padding:8px; display:flex; align-items:baseline; gap:8px; min-width:0; color:var(--muted); transition:background .25s,color .25s,border-color .25s}
+.modstrip li b{font-family:var(--f-display); font-weight:900; font-size:1.3rem; line-height:1; min-width:1.3em}
+.modstrip li span{font-family:var(--f-mono); font-size:.64rem; line-height:1.25; overflow-wrap:anywhere}
+@container modstrip (min-width:340px){ .modstrip ol{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@container modstrip (min-width:560px){
+  .modstrip ol{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .modstrip li{flex-direction:column; align-items:stretch; gap:5px; min-height:80px; padding:8px 6px}
+  .modstrip li b{font-size:1.7rem}
+  .modstrip li span{font-size:.6rem}
+}
+@container modstrip (min-width:760px){ .modstrip ol{grid-template-columns:repeat(9,minmax(0,1fr))} }
+@container modstrip (min-width:1360px){ .modstrip ol{grid-template-columns:repeat(17,minmax(0,1fr))} }
+@supports not (container-type:inline-size){
+  .modstrip{overflow-x:auto}
+  .modstrip ol{grid-template-columns:repeat(17,minmax(64px,1fr)); min-width:1150px}
+  .modstrip li{flex-direction:column; align-items:stretch; min-height:88px}
+}
 .modstrip li.on{background:var(--ink); color:var(--ground); border-color:var(--ink)}
 .modstrip li.part{background:repeating-linear-gradient(-45deg, var(--primer-wash) 0 5px, transparent 5px 10px); color:var(--ink); border-color:var(--ink)}
 .modstrip.na li{opacity:.4}
@@ -402,18 +416,112 @@ footer.site h2{font-family:var(--f-display); font-weight:900; text-transform:upp
 footer.site ul{list-style:none; display:flex; flex-direction:column; gap:8px}
 footer.site p + p{margin-top:10px}
 
-/* responsive */
-@media (max-width:1080px){
-  html{scroll-padding-top:64px}
-  .shell{grid-template-columns:minmax(0,1fr)}
-  .rail{position:sticky; top:0; z-index:20; height:auto; flex-direction:row; align-items:center; gap:18px; padding:10px 16px; border-right:0; border-bottom:1px solid var(--line); background:var(--ground); overflow-x:auto}
-  .brand span, .rail nav .grp, .rail .foot{display:none}
-  .brand b{font-size:1.1rem; white-space:nowrap}
-  .rail nav{flex-direction:row; gap:2px}
-  .rail nav a{display:block; white-space:nowrap; border-left:0; border-bottom:2px solid transparent; padding:6px 10px}
-  .rail nav a i{display:none}
-  .rail nav a.on{border-bottom-color:var(--primer)}
+/* ---------- navigation: menu button, reading progress ---------- */
+:root{--menu-bg:#0E1718; --menu-ink:#E3E9E5; --menu-muted:#8E9C97; --menu-line:rgba(227,233,229,.13); --menu-accent:#B3CB5C; --menu-accent-ink:#131C07}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--menu-bg:#060A0B} }
+:root[data-theme="dark"]{--menu-bg:#060A0B}
+html{scrollbar-gutter:stable}
+html.menu-open{overflow:hidden}
+.rail-top{display:flex; align-items:flex-start; justify-content:space-between; gap:12px}
+.rail-now{display:none}
+.menu-btn{flex:none; display:inline-flex; align-items:center; gap:9px; padding:8px 11px; font-family:var(--f-mono); font-size:.7rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); background:transparent; border:1.5px solid var(--ink); cursor:pointer; transition:background .2s, color .2s, border-color .2s}
+.menu-btn:hover{background:var(--ink); color:var(--ground)}
+.menu-btn-icon{display:flex; flex-direction:column; gap:3px; width:15px}
+.menu-btn-icon i{display:block; height:1.5px; background:currentColor; transition:width .3s cubic-bezier(.2,.8,.2,1)}
+.menu-btn-icon i:nth-child(1){width:100%}
+.menu-btn-icon i:nth-child(2){width:65%}
+.menu-btn-icon i:nth-child(3){width:35%}
+.menu-btn:hover .menu-btn-icon i{width:100%}
+.rail-progress{position:absolute; top:0; right:0; width:2px; height:100%; pointer-events:none}
+.rail-progress i{display:block; width:100%; height:calc(var(--p, 0) * 100%); background:var(--primer)}
+
+/* ---------- full-screen menu ---------- */
+.menu{position:fixed; inset:0; z-index:100; display:flex; flex-direction:column; overflow-y:auto; overscroll-behavior:contain; color:var(--menu-ink); background-color:var(--menu-bg); background-image:linear-gradient(rgba(227,233,229,.035) 1px, transparent 1px); background-size:100% 32px; clip-path:inset(0 0 100% 0); transition:clip-path .55s cubic-bezier(.76,0,.24,1)}
+.menu.is-open{clip-path:inset(0 0 0 0)}
+.menu :focus-visible{outline-color:var(--menu-accent)}
+.menu kbd{font-family:var(--f-mono); font-size:.62rem; letter-spacing:.04em; padding:1px 5px; border:1px solid currentColor; line-height:1.4}
+.menu-top{position:sticky; top:0; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px clamp(16px,4vw,48px); background:var(--menu-bg); border-bottom:1px solid var(--menu-line); font-family:var(--f-mono); font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--menu-muted)}
+.menu-title strong{color:var(--menu-ink); font-weight:600}
+.menu-meta{display:flex; align-items:center; gap:18px}
+.menu-read{display:inline-flex; align-items:center; gap:8px; white-space:nowrap}
+.menu-meter{position:relative; width:88px; height:4px; background:var(--menu-line)}
+.menu-meter i{position:absolute; top:0; bottom:0; left:0; width:calc(var(--p, 0) * 100%); background:var(--menu-accent)}
+.menu-close{display:inline-flex; align-items:center; gap:10px; padding:9px 14px 9px 11px; border:0; background:var(--rbf); color:var(--rbf-ink); font-family:var(--f-stencil); font-size:1rem; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; box-shadow:0 10px 18px -12px rgba(0,0,0,.8); transition:transform .2s}
+.menu-close::before{content:""; width:9px; height:9px; border-radius:50%; background:var(--menu-bg); box-shadow:inset 0 0 0 2px rgba(0,0,0,.3)}
+.menu-close:hover{transform:rotate(-2deg)}
+.menu-close kbd{border-color:rgba(255,255,255,.55)}
+.menu-body{flex:1; display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); gap:clamp(24px,4vw,64px); align-items:start; padding:clamp(18px,4vh,40px) clamp(16px,4vw,48px) 28px}
+.menu-list{list-style:none; display:flex; flex-direction:column; border-top:1px solid var(--menu-line)}
+.menu-item{border-bottom:1px solid var(--menu-line); opacity:0; transform:translateY(22px); transition:opacity .3s ease, transform .5s cubic-bezier(.2,.8,.2,1)}
+.menu.is-open .menu-item{opacity:1; transform:none; transition-delay:calc(.2s + var(--i, 0) * .045s)}
+.menu-row{display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:12px}
+.menu-link{position:relative; display:grid; grid-template-columns:4.6rem minmax(0,1fr); column-gap:clamp(12px,2vw,28px); align-items:baseline; padding:clamp(7px,1.2vh,12px) 0; text-decoration:none; color:var(--menu-ink)}
+.menu-link::after{content:""; position:absolute; left:0; bottom:-1px; width:0; height:4px; background:repeating-linear-gradient(-45deg, var(--menu-accent) 0 8px, transparent 8px 16px); transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.menu-link:hover::after, .menu-link:focus-visible::after, .menu-item.is-active .menu-link::after{width:100%}
+.menu-code{font-family:var(--f-mono); font-size:.76rem; letter-spacing:.06em; color:var(--menu-muted); transition:color .25s}
+.menu-name{display:inline-block; font-family:var(--f-display); font-weight:900; font-size:clamp(1.8rem, min(3.6vw, 5.6vh), 3.2rem); line-height:.9; text-transform:uppercase; transition:color .25s, transform .35s cubic-bezier(.2,.8,.2,1)}
+.menu-desc{grid-column:2; margin-top:5px; font-size:var(--s-sm); line-height:1.35; color:var(--menu-muted)}
+.menu-link:hover .menu-name, .menu-link:focus-visible .menu-name{color:var(--menu-accent); transform:translateX(10px)}
+.menu-item.is-active .menu-code{color:var(--menu-accent)}
+.menu-here{display:none; margin-left:12px; padding:3px 7px; vertical-align:middle; font-family:var(--f-mono); font-style:normal; font-size:.58rem; font-weight:600; letter-spacing:.14em; line-height:1.2; background:var(--menu-accent); color:var(--menu-accent-ink); transform:translateY(-.5em)}
+.menu-item.is-current .menu-here{display:inline-block}
+.menu-more{display:none; width:44px; height:44px; place-items:center; background:transparent; color:var(--menu-ink); border:1px solid var(--menu-line); font-family:var(--f-mono); font-size:1.25rem; cursor:pointer}
+.menu-more::before{content:"+"}
+.menu-more[aria-expanded="true"]{background:var(--menu-accent); border-color:var(--menu-accent); color:var(--menu-accent-ink)}
+.menu-more[aria-expanded="true"]::before{content:"\2212"}
+.menu-subinline{display:none; list-style:none; flex-direction:column; padding:0 0 16px calc(4.6rem + 12px)}
+.menu-item.is-expanded .menu-subinline{display:flex}
+.menu-preview{position:sticky; top:84px; display:flex; flex-direction:column; gap:12px; padding:22px 24px 24px; border:1px solid var(--menu-line); background:rgba(0,0,0,.18); opacity:0; transition:opacity .4s ease}
+.menu.is-open .menu-preview{opacity:1; transition-delay:.45s}
+.menu-pv-head{display:flex; justify-content:space-between; gap:12px}
+.menu-pv-head .eyebrow{color:var(--menu-muted)}
+.menu-numeral{font-family:var(--f-display); font-weight:900; font-size:clamp(4rem,8.5vw,8.5rem); line-height:.8; letter-spacing:-.02em; white-space:nowrap; overflow:hidden; color:transparent; -webkit-text-stroke:1.5px var(--menu-accent)}
+@supports not (-webkit-text-stroke:1px black){ .menu-numeral{color:var(--menu-accent)} }
+.menu-numeral.swap{animation:numIn .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes numIn{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+.menu-preview h3{font-family:var(--f-display); font-weight:800; font-size:1.7rem; line-height:.95; text-transform:uppercase}
+.menu-sub, .menu-subinline{list-style:none; display:flex; flex-direction:column}
+.menu-sub{border-top:1px solid var(--menu-line)}
+.menu-subinline{display:none}
+.menu-sub a, .menu-subinline a{display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:10px 0; border-bottom:1px solid var(--menu-line); font-size:var(--s-sm); line-height:1.35; text-decoration:none; color:var(--menu-ink); transition:color .2s, padding-left .25s}
+.menu-sub a span, .menu-subinline a span{font-family:var(--f-mono); font-size:.8rem; color:var(--menu-muted)}
+.menu-sub a:hover, .menu-sub a:focus-visible, .menu-subinline a:hover, .menu-subinline a:focus-visible{color:var(--menu-accent); padding-left:8px}
+.menu-foot{display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px 20px; padding:14px clamp(16px,4vw,48px) 18px; border-top:1px solid var(--menu-line); font-family:var(--f-mono); font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--menu-muted)}
+.hint-touch{display:none}
+@media (max-height:760px){ .menu-desc{display:none} }
+
+/* ---------- layout refinements ---------- */
+.scroll-hint{display:flex; align-items:center; gap:8px; font-family:var(--f-mono); font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.scroll-hint::after{content:"\2192"; display:inline-block; animation:nudge 1.6s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateX(6px)}}
+.node{padding:16px 12px 14px}
+.node h3{font-size:clamp(1.4rem,1.9vw,1.9rem)}
+.timeline{overflow:visible; padding-bottom:0}
+.timeline ol{grid-auto-flow:row; grid-auto-columns:auto; grid-template-columns:repeat(4,minmax(0,1fr)); row-gap:36px; min-width:0}
+.timeline ol::before{content:none}
+.timeline li{position:relative}
+.timeline li::before{content:""; position:absolute; left:0; right:0; top:50px; height:1.5px; background:var(--ink)}
+.timeline .pip{position:relative; z-index:1}
+
+/* ---------- responsive ---------- */
+@media (max-width:1280px){
   .groups{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:1080px){
+  html{scroll-padding-top:72px}
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .rail{position:sticky; top:0; z-index:30; height:auto; display:block; padding:10px clamp(14px,4vw,32px); border-right:0; border-bottom:1px solid var(--line); background:var(--ground); overflow:visible}
+  .rail nav, .rail .foot, .brand span{display:none}
+  .rail-top{align-items:center}
+  .brand b{font-size:1.2rem; white-space:nowrap}
+  .brand b br{display:none}
+  .rail-now{display:flex; flex:1; min-width:0; justify-content:center; align-items:baseline; gap:8px; font-family:var(--f-mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); white-space:nowrap}
+  .rail-now b{font-weight:600; color:var(--primer-text)}
+  .rail-now span{overflow:hidden; text-overflow:ellipsis}
+  .menu-btn{background:var(--ink); color:var(--ground); padding:10px 13px}
+  .menu-btn:hover{background:var(--primer); border-color:var(--primer); color:var(--primer-ink)}
+  .rail-progress{top:auto; bottom:-1px; left:0; right:auto; width:100%; height:2px}
+  .rail-progress i{width:calc(var(--p, 0) * 100%); height:100%}
 }
 @media (max-width:900px){
   .hero-grid, .hero-lower, .grid-2, .ex-body, .ratings, .compare, .sec-head, footer.site{grid-template-columns:minmax(0,1fr)}
@@ -422,10 +530,11 @@ footer.site p + p{margin-top:10px}
   .levels{grid-template-columns:minmax(0,1fr)}
   .levels div + div{padding-left:0; border-left:0}
   .chain{grid-template-columns:minmax(0,1fr)}
-  .node{margin-right:0; margin-bottom:28px}
+  .node{margin-right:0; margin-bottom:28px; padding:16px}
   .node:last-child{margin-bottom:0}
   .node:not(:last-child)::after{right:auto; left:32px; top:auto; bottom:-29px; width:1.5px; height:28px}
   .node:not(:last-child)::before{right:auto; left:28px; top:auto; bottom:-29px; border:5px solid transparent; border-top:7px solid var(--ink); border-bottom:0; transform:none}
+  .node h3{font-size:1.8rem}
   .ex-id{border-right:0; border-bottom:1px solid var(--line)}
   .compare > div + div{border-left:0; border-top:1.5px solid var(--ink)}
   .glossary{grid-template-columns:minmax(0,1fr)}
@@ -434,28 +543,96 @@ footer.site p + p{margin-top:10px}
   .crs .fields div:nth-child(2){border-right:0}
   .crs .fields div:nth-child(-n+2){border-bottom:1px solid var(--line)}
   .rbf{display:none}
-  .blueprint{padding-right:0}
+  .blueprint{padding-right:0; max-width:620px; margin-inline:auto !important}
   .sec-head .intro{padding-bottom:0}
+  .ratings .stack{display:grid; grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ratings .stack .cls:last-child{grid-column:1/-1}
+  .menu-body{grid-template-columns:minmax(0,1fr)}
+  .menu-preview{display:none}
+  .menu-more{display:grid}
+  .menu-link{grid-template-columns:3.6rem minmax(0,1fr); column-gap:12px}
+  .menu-subinline{padding-left:calc(3.6rem + 12px)}
+  .hint-keys{display:none}
+  .hint-touch{display:inline}
+}
+@media (max-width:720px){
+  .timeline ol{grid-template-columns:minmax(0,1fr); row-gap:22px; padding-left:28px}
+  .timeline li{padding:0; gap:4px}
+  .timeline li::before{left:-22px; right:auto; top:0; bottom:-22px; width:1.5px; height:auto}
+  .timeline li:first-child::before{top:14px}
+  .timeline li:last-child::before{bottom:auto; height:14px}
+  .timeline .pip{position:absolute; left:-28px; top:8px; margin:0}
+  .timeline .yr{height:auto; font-size:1.7rem}
+}
+@media (max-width:640px){
+  .ex-tabs{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); overflow:visible}
+  .ex-tabs button{min-width:0; padding:12px 2px 10px; font-size:clamp(1.05rem,4.6vw,1.5rem)}
+  .ex-id, .ex-side, .modstrip{padding:18px}
+  .tbl-wrap table.stack thead{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+  .tbl-wrap table.stack, .stack tbody, .stack tr, .stack td{display:block; width:100%}
+  .stack tr{padding:14px 16px; border-bottom:1px solid var(--line)}
+  .stack tbody tr:last-child{border-bottom:0}
+  .stack td{display:grid; grid-template-columns:minmax(6.5em,36%) minmax(0,1fr); gap:10px; padding:4px 0; border:0; white-space:normal}
+  .stack td::before{content:attr(data-label); padding-top:3px; font-family:var(--f-mono); font-size:.62rem; letter-spacing:.1em; line-height:1.4; text-transform:uppercase; color:var(--muted)}
+  .stack td:first-child, .stack td[data-label=""]{display:block}
+  .stack td:first-child{padding-bottom:8px; font-family:var(--f-display); font-weight:800; font-size:1.3rem; line-height:1.05; text-transform:uppercase; white-space:normal}
+  .stack td:first-child::before, .stack td[data-label=""]::before{content:none}
+  .stack td:first-child[data-prefix]::before{content:attr(data-prefix) "\00a0"; display:inline; padding:0; font:inherit; letter-spacing:inherit; color:var(--muted)}
+  .stack tr.hl{background:var(--primer-wash); box-shadow:inset 4px 0 0 var(--primer)}
+  .stack tr.hl td{background:transparent; box-shadow:none}
+  .ratings .stack{grid-template-columns:minmax(0,1fr)}
 }
 @media (max-width:560px){
+  .hero{padding-top:18px}
+  .hero-top .rev{display:none}
+  .hero-actions .btn{flex:1 1 100%; justify-content:center}
+  .bp-txt{display:none}
+  .bp-label{font-size:17px}
+  .bp-small{font-size:12px}
   .req, .steps, .sev, .grid-3, .groups{grid-template-columns:minmax(0,1fr)}
   .dozen, .ata{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .facts div{padding:14px}
+  .facts b{font-size:1.75rem}
   .plate dl{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .plate dd{font-size:1.6rem}
+  .bars{padding:14px 12px 10px}
   .bar-row, .axis{grid-template-columns:3.4em minmax(0,1fr) 4.6em; column-gap:10px}
   .bar-row .val small{display:none}
+  .crs header{flex-wrap:wrap}
   .crs .body{grid-template-columns:minmax(0,1fr)}
+  .stamp{width:94px; height:94px}
+  .block-head{flex-direction:column; align-items:flex-start; gap:6px}
+  .points li{grid-template-columns:6.6em minmax(0,1fr) auto}
+  .compare > div{padding:18px}
+  .steps li{padding:18px}
   .glossary div{grid-template-columns:minmax(0,1fr); gap:2px}
   .cls.wide ul{grid-template-columns:minmax(0,1fr)}
   .cls.wide li:nth-child(odd){border-right:0}
   .cls.wide li:nth-last-child(2){border-bottom:1px solid var(--line)}
+  .faq summary{font-size:var(--s-md)}
+  .faq .ans{padding-right:0}
+  .menu-top{font-size:.66rem}
+  .menu-meter, .menu-title span{display:none}
+  .menu-close kbd{display:none}
+  .menu-desc{font-size:.84rem}
+}
+@media (max-width:420px){
+  .rail-now span{display:none}
+  .brand b{font-size:1.05rem}
 }
 </style>
 </head>
 <body>
 <div class="shell">
 <aside class="rail" aria-label="Contents">
-  <a class="brand" href="#top"><b>Release to<br>Service</b><span>EASA maintenance guide</span></a>
-  <nav>
+  <div class="rail-top">
+    <a class="brand" href="#top"><b>Release to<br> Service</b><span>EASA maintenance guide</span></a>
+    <p class="rail-now" aria-hidden="true"><b id="now-code">Intro</b><span id="now-name">Cover</span></p>
+    <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="site-menu"><span class="menu-btn-icon" aria-hidden="true"><i></i><i></i><i></i></span><span>Menu</span></button>
+  </div>
+  <span class="rail-progress" aria-hidden="true"><i></i></span>
+  <nav aria-label="Sections">
     <span class="grp">Framework</span>
     <a href="#system"><i>1321</i>The system</a>
     <span class="grp">The three Parts</span>
@@ -515,17 +692,17 @@ footer.site p + p{margin-top:10px}
         <rect class="bp-line" x="268" y="250" width="12" height="20"/>
         <path class="bp-fill" d="M257 350 H263 L262 444 H258 Z"/>
         <path class="bp-call" d="M263 26 H330"/><circle class="bp-dot" cx="260" cy="26" r="3.5"/>
-        <text class="bp-label" x="336" y="30"><tspan class="bp-code">ATA 34</tspan> NAVIGATION</text>
+        <text class="bp-label" x="336" y="30"><tspan class="bp-code">ATA 34</tspan><tspan class="bp-txt"> NAVIGATION</tspan></text>
         <path class="bp-call" d="M147 208 V160 H40"/><circle class="bp-dot" cx="147" cy="212" r="3.5"/>
-        <text class="bp-label" x="40" y="153"><tspan class="bp-code">ATA 72</tspan> ENGINE</text>
+        <text class="bp-label" x="40" y="153"><tspan class="bp-code">ATA 72</tspan><tspan class="bp-txt"> ENGINE</tspan></text>
         <path class="bp-call" d="M430 292 V180 H330"/><circle class="bp-dot" cx="430" cy="296" r="3.5"/>
-        <text class="bp-label" x="330" y="173"><tspan class="bp-code">ATA 27</tspan> FLIGHT CONTROLS</text>
+        <text class="bp-label" x="330" y="173"><tspan class="bp-code">ATA 27</tspan><tspan class="bp-txt"> FLIGHT CONTROLS</tspan></text>
         <path class="bp-call" d="M330 244 V340 H512"/><circle class="bp-dot" cx="330" cy="240" r="3.5"/>
-        <text class="bp-label" x="512" y="333" text-anchor="end"><tspan class="bp-code">ATA 28</tspan> FUEL</text>
+        <text class="bp-label" x="512" y="333" text-anchor="end"><tspan class="bp-code">ATA 28</tspan><tspan class="bp-txt"> FUEL</tspan></text>
         <path class="bp-call" d="M243 265 L120 372 H40"/><circle class="bp-dot" cx="246" cy="262" r="3.5"/>
-        <text class="bp-label" x="40" y="388"><tspan class="bp-code">ATA 32</tspan> LANDING GEAR</text>
+        <text class="bp-label" x="40" y="388"><tspan class="bp-code">ATA 32</tspan><tspan class="bp-txt"> LANDING GEAR</tspan></text>
         <path class="bp-call" d="M263 442 L276 454 H512"/><circle class="bp-dot" cx="260" cy="440" r="3.5"/>
-        <text class="bp-label" x="512" y="448" text-anchor="end"><tspan class="bp-code">ATA 49</tspan> APU</text>
+        <text class="bp-label" x="512" y="448" text-anchor="end"><tspan class="bp-code">ATA 49</tspan><tspan class="bp-txt"> APU</tspan></text>
         <text class="bp-small" x="40" y="466">PLAN VIEW &#183; NOT TO SCALE &#183; FS STATIONS</text>
       </svg>
     </figure>
@@ -610,7 +787,7 @@ footer.site p + p{margin-top:10px}
   </div>
 
   <div class="block">
-    <div class="block-head"><h3 class="h3">How we got here</h3><span class="eyebrow">Scroll sideways on small screens</span></div>
+    <div class="block-head"><h3 class="h3">How we got here</h3><span class="eyebrow">1990s &rarr; today</span></div>
     <div class="timeline">
       <ol>
         <li><span class="yr">1990s</span><span class="pip"></span><b>JAA codes</b><p>The Joint Aviation Authorities publish JAR-145, JAR-66 and JAR-147, harmonised codes the EU later turns into law.</p></li>
@@ -1205,6 +1382,83 @@ footer.site p + p{margin-top:10px}
 </main>
 </div>
 
+<!-- ================= FULL-SCREEN MENU ================= -->
+<div class="menu" id="site-menu" role="dialog" aria-modal="true" aria-labelledby="menu-title" hidden>
+  <div class="menu-top">
+    <p class="menu-title" id="menu-title"><strong>Release to Service</strong> <span>&middot; Contents</span></p>
+    <div class="menu-meta">
+      <span class="menu-read"><span class="menu-meter" aria-hidden="true"><i></i></span><span id="menu-pct">0%</span>&nbsp;read</span>
+      <button type="button" class="menu-close" data-menu-close>Close <kbd>Esc</kbd></button>
+    </div>
+  </div>
+  <div class="menu-body">
+    <nav aria-label="Sections menu">
+      <ol class="menu-list">
+        <li class="menu-item" style="--i:0" data-code="Intro" data-name="Cover">
+          <div class="menu-row">
+            <a class="menu-link" href="#top"><span class="menu-code">Intro</span><span class="menu-name">Cover<em class="menu-here" aria-hidden="true">You are here</em></span><span class="menu-desc">Introduction, sample release certificate and key figures</span></a>
+            <button type="button" class="menu-more" aria-expanded="false" aria-controls="msub-top" aria-label="Show parts of Cover"></button>
+          </div>
+          <ul class="menu-subinline" id="msub-top"></ul>
+        </li>
+        <li class="menu-item" style="--i:1" data-code="1321" data-name="The system">
+          <div class="menu-row">
+            <a class="menu-link" href="#system"><span class="menu-code">1321</span><span class="menu-name">The system<em class="menu-here" aria-hidden="true">You are here</em></span><span class="menu-desc">Layers of rules, the annexes, how the Parts connect, timeline</span></a>
+            <button type="button" class="menu-more" aria-expanded="false" aria-controls="msub-system" aria-label="Show parts of The system"></button>
+          </div>
+          <ul class="menu-subinline" id="msub-system"></ul>
+        </li>
+        <li class="menu-item" style="--i:2" data-code="147" data-name="Training organisations">
+          <div class="menu-row">
+            <a class="menu-link" href="#p147"><span class="menu-code">147</span><span class="menu-name">Training organisations<em class="menu-here" aria-hidden="true">You are here</em></span><span class="menu-desc">School requirements, course hours, exams, type training</span></a>
+            <button type="button" class="menu-more" aria-expanded="false" aria-controls="msub-p147" aria-label="Show parts of Training organisations"></button>
+          </div>
+          <ul class="menu-subinline" id="msub-p147"></ul>
+        </li>
+        <li class="menu-item" style="--i:3" data-code="66" data-name="Engineer licensing">
+          <div class="menu-row">
+            <a class="menu-link" href="#p66"><span class="menu-code">66</span><span class="menu-name">Engineer licensing<em class="menu-here" aria-hidden="true">You are here</em></span><span class="menu-desc">Licence explorer, modules, experience, ratings, pathway</span></a>
+            <button type="button" class="menu-more" aria-expanded="false" aria-controls="msub-p66" aria-label="Show parts of Engineer licensing"></button>
+          </div>
+          <ul class="menu-subinline" id="msub-p66"></ul>
+        </li>
+        <li class="menu-item" style="--i:4" data-code="145" data-name="Maintenance organisations">
+          <div class="menu-row">
+            <a class="menu-link" href="#p145"><span class="menu-code">145</span><span class="menu-name">Maintenance organisations<em class="menu-here" aria-hidden="true">You are here</em></span><span class="menu-desc">Ratings, people, release to service, SMS, oversight</span></a>
+            <button type="button" class="menu-more" aria-expanded="false" aria-controls="msub-p145" aria-label="Show parts of Maintenance organisations"></button>
+          </div>
+          <ul class="menu-subinline" id="msub-p145"></ul>
+        </li>
+        <li class="menu-item" style="--i:5" data-code="ATA 05" data-name="Hangar floor">
+          <div class="menu-row">
+            <a class="menu-link" href="#floor"><span class="menu-code">ATA 05</span><span class="menu-name">Hangar floor<em class="menu-here" aria-hidden="true">You are here</em></span><span class="menu-desc">Checks, documents, human factors, ATA chapters</span></a>
+            <button type="button" class="menu-more" aria-expanded="false" aria-controls="msub-floor" aria-label="Show parts of Hangar floor"></button>
+          </div>
+          <ul class="menu-subinline" id="msub-floor"></ul>
+        </li>
+        <li class="menu-item" style="--i:6" data-code="GM" data-name="Glossary &amp; FAQ">
+          <div class="menu-row">
+            <a class="menu-link" href="#gm"><span class="menu-code">GM</span><span class="menu-name">Glossary &amp; FAQ<em class="menu-here" aria-hidden="true">You are here</em></span><span class="menu-desc">32 terms and plain answers to common questions</span></a>
+            <button type="button" class="menu-more" aria-expanded="false" aria-controls="msub-gm" aria-label="Show parts of Glossary and FAQ"></button>
+          </div>
+          <ul class="menu-subinline" id="msub-gm"></ul>
+        </li>
+      </ol>
+    </nav>
+    <aside class="menu-preview" aria-label="Section contents">
+      <div class="menu-pv-head"><p class="eyebrow">Inside this section</p><span class="eyebrow" id="menu-pv-count"></span></div>
+      <div class="menu-numeral" id="menu-numeral" aria-hidden="true">Intro</div>
+      <h3 id="menu-pv-name">Cover</h3>
+      <ul class="menu-sub" id="menu-sub"></ul>
+    </aside>
+  </div>
+  <div class="menu-foot">
+    <span>Rev. 2026-09 &middot; Parts 147 / 66 / 145 &middot; Not legal text</span>
+    <span class="hint-keys"><kbd>&uarr;</kbd> <kbd>&darr;</kbd> move &middot; <kbd>Enter</kbd> open &middot; <kbd>Esc</kbd> close</span>
+    <span class="hint-touch">Tap <kbd>+</kbd> to see what&rsquo;s inside a section</span>
+  </div>
+</div>
+
 <style>[hidden]{display:none !important}</style>
 <script>
 (function(){
@@ -1336,21 +1590,171 @@ footer.site p + p{margin-top:10px}
   });
   render("B1","B1.1");
 
-  /* active section in the rail */
-  var rail=document.querySelector(".rail"), links=document.querySelectorAll(".rail nav a"), map={};
-  links.forEach(function(a){map[a.getAttribute("href").slice(1)]=a;});
+  /* tables stack into labelled cards on phones */
+  document.querySelectorAll(".tbl-wrap table:not(.mx)").forEach(function(t){
+    var heads=[].slice.call(t.querySelectorAll("thead th")).map(function(th){return th.textContent.trim();});
+    t.classList.add("stack");
+    t.querySelectorAll("tbody tr").forEach(function(tr){
+      var col=0;
+      [].slice.call(tr.children).forEach(function(td){
+        td.setAttribute("data-label", td.colSpan>1?"":(heads[col]||""));
+        if(col===0&&heads[0]==="Annex") td.setAttribute("data-prefix","Annex");
+        col+=td.colSpan||1;
+      });
+    });
+  });
+
+  /* hint when the module matrix is wider than its box */
+  var mxWrap=$("mx").closest(".tbl-wrap"), mxHint=document.createElement("p");
+  mxHint.className="scroll-hint"; mxHint.textContent="Scroll sideways to see every category";
+  mxWrap.parentNode.insertBefore(mxHint,mxWrap);
+  function checkHint(){ mxHint.hidden=mxWrap.scrollWidth<=mxWrap.clientWidth+1; }
+  window.addEventListener("resize",checkHint);
+  checkHint();
+
+  /* navigation: sections, progress and the full-screen menu */
+  var root=document.documentElement, shell=document.querySelector(".shell");
+  var menu=$("site-menu"), menuBtn=$("menu-btn");
+  var menuItems=[].slice.call(menu.querySelectorAll(".menu-item"));
+  var railLinks=[].slice.call(document.querySelectorAll(".rail nav a"));
+  var reduce=window.matchMedia("(prefers-reduced-motion: reduce)");
+  function slug(s){return s.toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");}
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+
+  var sections=menuItems.map(function(li){
+    var a=li.querySelector(".menu-link"), id=a.getAttribute("href").slice(1);
+    var el=id==="top"?document.querySelector(".hero"):$(id), subs=[];
+    if(id==="top"){
+      [[".crs","sample-crs","Sample release certificate"],[".plate","key-figures","Data plate: key figures"]].forEach(function(x){
+        var n=document.querySelector(x[0]); if(n){n.id=x[1]; subs.push({id:x[1],text:x[2]});}
+      });
+    } else if(el){
+      el.querySelectorAll(".block").forEach(function(b){
+        var h=b.querySelector(".block-head .h3"); if(!h) return;
+        if(!b.id) b.id=id+"-"+slug(h.textContent);
+        subs.push({id:b.id,text:h.textContent});
+      });
+    }
+    return {id:id, el:el, li:li, link:a, code:li.getAttribute("data-code"), name:li.getAttribute("data-name"), subs:subs};
+  });
+  function subHTML(s){return s.subs.map(function(x){return '<li><a href="#'+x.id+'">'+esc(x.text)+'<span aria-hidden="true">&rarr;</span></a></li>';}).join("");}
+
+  var pvNum=$("menu-numeral"), pvName=$("menu-pv-name"), pvList=$("menu-sub"), pvCount=$("menu-pv-count"), previewed=null;
+  function preview(s){
+    if(!s||s===previewed) return; previewed=s;
+    menuItems.forEach(function(li){li.classList.toggle("is-active",li===s.li);});
+    pvNum.textContent=s.code; pvName.textContent=s.name; pvList.innerHTML=subHTML(s);
+    pvCount.textContent=s.subs.length+(s.subs.length===1?" part":" parts");
+    pvNum.classList.remove("swap"); void pvNum.offsetWidth; pvNum.classList.add("swap");
+  }
+
+  sections.forEach(function(s){
+    var ul=s.li.querySelector(".menu-subinline"), more=s.li.querySelector(".menu-more");
+    ul.innerHTML=subHTML(s);
+    if(!s.subs.length){more.hidden=true;}
+    more.addEventListener("click",function(){
+      var open=!s.li.classList.contains("is-expanded");
+      s.li.classList.toggle("is-expanded",open);
+      more.setAttribute("aria-expanded",String(open));
+    });
+    s.link.addEventListener("mouseenter",function(){preview(s);});
+    s.link.addEventListener("focus",function(){preview(s);});
+  });
+
+  var current=null;
+  function setCurrent(s){
+    if(!s||s===current) return; current=s;
+    sections.forEach(function(x){
+      var on=x===s; x.li.classList.toggle("is-current",on);
+      if(on) x.link.setAttribute("aria-current","location"); else x.link.removeAttribute("aria-current");
+    });
+    railLinks.forEach(function(a){
+      var on=a.getAttribute("href")==="#"+s.id; a.classList.toggle("on",on);
+      if(on) a.setAttribute("aria-current","location"); else a.removeAttribute("aria-current");
+    });
+    $("now-code").textContent=s.code; $("now-name").textContent=s.name;
+  }
+  setCurrent(sections[0]);
   if("IntersectionObserver" in window){
     var io=new IntersectionObserver(function(es){
       es.forEach(function(e){
         if(!e.isIntersecting) return;
-        var a=map[e.target.id]; if(!a) return;
-        links.forEach(function(l){l.classList.remove("on");});
-        a.classList.add("on");
-        if(rail.scrollWidth>rail.clientWidth) rail.scrollLeft=a.offsetLeft-rail.clientWidth/2+a.offsetWidth/2;
+        for(var i=0;i<sections.length;i++){ if(sections[i].el===e.target){ setCurrent(sections[i]); break; } }
       });
     },{rootMargin:"-35% 0px -60% 0px"});
-    Object.keys(map).forEach(function(id){var s=$(id); if(s) io.observe(s);});
+    sections.forEach(function(s){if(s.el) io.observe(s.el);});
   }
+
+  var ticking=false, pct=$("menu-pct");
+  function progress(){
+    ticking=false;
+    var max=root.scrollHeight-window.innerHeight, p=max>0?Math.min(1,Math.max(0,window.scrollY/max)):0;
+    root.style.setProperty("--p",p.toFixed(4)); pct.textContent=Math.round(p*100)+"%";
+  }
+  window.addEventListener("scroll",function(){if(!ticking){ticking=true; requestAnimationFrame(progress);}},{passive:true});
+  window.addEventListener("resize",progress);
+  progress();
+
+  var closeTimer=null;
+  function setInert(on){ if("inert" in shell) shell.inert=on; else if(on) shell.setAttribute("aria-hidden","true"); else shell.removeAttribute("aria-hidden"); }
+  function openMenu(){
+    if(menu.classList.contains("is-open")) return;
+    clearTimeout(closeTimer);
+    previewed=null; preview(current);
+    menu.hidden=false;
+    root.classList.add("menu-open");
+    setInert(true);
+    menuBtn.setAttribute("aria-expanded","true");
+    void menu.offsetWidth;
+    menu.classList.add("is-open");
+    current.link.focus({preventScroll:true});
+  }
+  function closeMenu(after){
+    if(!menu.classList.contains("is-open")) return;
+    menu.classList.remove("is-open");
+    menuBtn.setAttribute("aria-expanded","false");
+    setInert(false);
+    root.classList.remove("menu-open");
+    closeTimer=setTimeout(function(){
+      menu.hidden=true;
+      sections.forEach(function(s){ s.li.classList.remove("is-expanded"); s.li.querySelector(".menu-more").setAttribute("aria-expanded","false"); });
+    }, reduce.matches?0:560);
+    if(typeof after==="function") after();
+    else menuBtn.focus({preventScroll:true});
+  }
+
+  menuBtn.addEventListener("click",openMenu);
+  menu.querySelectorAll("[data-menu-close]").forEach(function(b){b.addEventListener("click",function(){closeMenu();});});
+  menu.addEventListener("click",function(e){
+    var a=e.target.closest("a[href^='#']"); if(!a) return;
+    var id=a.getAttribute("href").slice(1), el=id==="top"?document.querySelector(".hero"):$(id);
+    if(!el) return;
+    e.preventDefault();
+    closeMenu(function(){
+      el.scrollIntoView({behavior:reduce.matches?"auto":"smooth", block:"start"});
+      if(history.replaceState) history.replaceState(null,"","#"+id);
+      var h=el.querySelector("h1, h2, h3")||el;
+      if(!h.hasAttribute("tabindex")) h.setAttribute("tabindex","-1");
+      h.focus({preventScroll:true});
+    });
+  });
+  menu.addEventListener("keydown",function(e){
+    if(e.key==="Escape"){ e.preventDefault(); closeMenu(); return; }
+    if(e.key==="Tab"){
+      var f=[].slice.call(menu.querySelectorAll("a[href], button")).filter(function(x){return !x.hidden&&x.offsetParent!==null;});
+      if(!f.length) return;
+      if(e.shiftKey&&document.activeElement===f[0]){ e.preventDefault(); f[f.length-1].focus(); }
+      else if(!e.shiftKey&&document.activeElement===f[f.length-1]){ e.preventDefault(); f[0].focus(); }
+      return;
+    }
+    if(e.key==="ArrowDown"||e.key==="ArrowUp"||e.key==="Home"||e.key==="End"){
+      var links=sections.map(function(s){return s.link;}), i=links.indexOf(document.activeElement);
+      if(i<0) return;
+      e.preventDefault();
+      var n=e.key==="Home"?0:e.key==="End"?links.length-1:(i+(e.key==="ArrowDown"?1:-1)+links.length)%links.length;
+      links[n].focus();
+    }
+  });
 
   /* glossary filter */
   var q=$("gl-q"), items=document.querySelectorAll("#glossary > div"), count=$("gl-count");
