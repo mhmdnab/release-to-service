@@ -1,5 +1,7 @@
 # Release to Service
 
+**Live site:** https://mhmdnab.github.io/release-to-service/
+
 A one-page, illustrated guide to aircraft maintenance engineering in Europe under the EASA continuing airworthiness rules, Regulation (EU) No 1321/2014:
 
 - **Part-147**: maintenance training organisations, minimum basic course hours, examinations, type training and OJT
@@ -22,7 +24,9 @@ Then visit http://localhost:8000.
 
 ## Deploy
 
-Any static host works. On Vercel, import the repository and use the defaults: no framework, no build command, and the project root as the output directory.
+The site is published with **GitHub Pages** from the `main` branch (repository root), and every push to `main` redeploys it.
+
+Any other static host works too. On Vercel or Netlify, import the repository with no framework, no build command, and the project root as the output directory.
 
 ## Sources
 
